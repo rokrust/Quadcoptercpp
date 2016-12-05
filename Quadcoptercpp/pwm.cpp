@@ -8,6 +8,7 @@
 Pwm::Pwm(){
 	DDRD |= (1 << PORTD6);
 	
+	//Output compare value
 	OCR0A = 0xff;
 
 	//Clear OC0A on compare (non-inverted mode)
@@ -31,9 +32,9 @@ void Pwm::setCompare(uint8_t cmp){
 }
 
 void Pwm::enable(){
-	//Enable without prescaler
-	TCCR0B |= (1 << CS02);
-	TCCR0B &= ~((1 < CS00) | (1 << CS01));
+	//Enable with 256 prescaler
+	TCCR0B |= (1 << CS02) | (1 << CS00);
+	TCCR0B &= ~(1 < CS01);
 
 }
 

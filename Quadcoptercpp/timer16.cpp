@@ -37,12 +37,12 @@ Timer16::Timer16(uint16_t outputCmp){
 	sei();
 }
 
-void enable(){
+void Timer16::enable(){
 	TCCR1B |= (1 << CS12) | (1 << CS10);
 	TCCR1B &= ~(1 << CS11);
 }
 
-void disable(){
+void Timer16::disable(){
 	TCCR1B &= ~((1 << CS12) | (1 << CS11) | (1 << CS10));
 }
 

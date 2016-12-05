@@ -1,0 +1,4 @@
+﻿MotorControl::MotorControl(){
+	
+
+}

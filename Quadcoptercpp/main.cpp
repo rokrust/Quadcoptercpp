@@ -35,25 +35,40 @@ int main(void)
 	//MPU6050 mpu;
 	//Lcd lcd;
 	//Adc adc;
-	GPS gps;
+	//GPS gps;
 	
-	//Pwm pwm(120);
-
+	Pwm pwm;
+	pwm.setCompare(100);
+	
+	pwm.enable();
+	_delay_ms(5000);
 	/*
 	lcd.writeString(0, 0, "AccX: ");
 	lcd.writeString(8, 0, "AccY: ");
 	lcd.writeString(16, 0, "AccZ: ");
 	*/
-
-	//pwm.enable();
-	
+	//pwm.setCompare(20);
+	//_delay_ms(5000);
+	//pwm.setCompare(20);
+	//_delay_ms(5000);
+	//pwm.setCompare(50);
+	//_delay_ms(5000);
+	//pwm.setCompare(200);
+	//_delay_ms(5000);
+	//pwm.setCompare(150);
+	//_delay_ms(5000);
+	//pwm.setCompare(100);
+	//_delay_ms(5000);
+	pwm.setCompare(50);
+	_delay_ms(5000);
+	pwm.setCompare(80);
 	while (1)
 	{	
-		
+	_delay_us(10);	
 		//mpu.update_movement();
 		//gps.updateString();
 		//printf("%s", gps.getString());
-		printf("%c", USART_receive());
+		//printf("%c", USART_receive());
 		
 		//sprintf(numberArray, "%d", mpu.getMovementData(0));
 		//lcd.writeString(0, 48, numberArray);
