@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PWM_H
+#define PWM_H
+
 #include <stdint.h>
 
 class Pwm{
@@ -12,3 +14,5 @@ class Pwm{
 	void setCompare(uint8_t	cmp);
 	void disable();
 };
+
+#endif

@@ -1,15 +1,24 @@
+#ifndef MOTOR_CONTROL_H
+#define MOTOR_CONTROL_H
+
+
 #define ESC_MAX_VALUE 0x03ff;
 #define ESC_MIN_VALUE 0x00ff;
 
-//Should probably use an ESC or Motor middle class here
-//and have an array of Motor/ESC classes as members
-class MotorControl{
+//Once again: Put in a designated header file
+#define N_MOTORS 4
+#define F_PWM 300
+
+#include "Motor.h"
+
+class Motorcontrol{
 private:
-	//Might use an 8 bit pwm as well
-	Pwm16 pwm;
-
+	Motor motors[N_MOTORS];	
+	
 public:
-	MotorControl();
-
+	Motorcontrol();
+	calibrate_escs(); 
 
 };
+
+#endif

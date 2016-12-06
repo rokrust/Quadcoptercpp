@@ -1,3 +1,7 @@
+#ifndef PWM16_H
+#define PWM16_H
+
+
 #include "timer16.h"
 #include "adc.h"
 #include "MPU6050.h"
@@ -24,3 +28,5 @@ public:
 	void disable();
 
 };
+
+#endif
