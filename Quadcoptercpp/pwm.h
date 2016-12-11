@@ -4,12 +4,15 @@
 #include <stdint.h>
 
 class Pwm{
-	private:
+private:
 	uint8_t outputCmp;
+	volatile uint8_t* outputCmpRegister;
 
-	public:
+	void setOutputCompareRegister(int timerNumber);
+
+public:
 	Pwm();
-	Pwm(uint8_t outputCmp);
+	Pwm(uint8_t outputCmp, int timerNumber);
 	void enable();
 	void setCompare(uint8_t	cmp);
 	void disable();

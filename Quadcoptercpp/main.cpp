@@ -41,8 +41,9 @@ int main(void)
 	
 	//Motor motor(300);
 
-	Pwm16 pwm(255, 127);
+	Pwm pwm(64, 0);
 	pwm.enable();
+
 	
 //	_delay_ms(3000);
 //	pwm.setCompare(16);
