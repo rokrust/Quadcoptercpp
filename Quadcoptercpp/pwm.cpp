@@ -6,14 +6,17 @@
 #include <stdio.h>
 
 Pwm::Pwm(){
-	DDRD |= (1 << PORTD6);
-	
+	//Activates all 8 bit timers. Can not be used with SPI
+	DDRD |= (1 << PORTD3) | (1 << PORTD5) | (1 << PORTD6);
+	DDRB |= (1 << PORTB3);
+
 	//Output compare value
 	OCR0A = 0xff;
 
-	//Clear OC0A on compare (non-inverted mode)
-	TCCR0A |= (1 << COM0A0);
-	TCCR0A &= ~(1 << COM0A1);
+	//Clear compare match (non-inverted mode)
+	TCCR0A |= (1 << COM0A0) | (1 << COM0B0);
+	TCCR0A &= ~((1 << COM0A1) | (1 << COM0B1));
+	TCCR2A |= 
 
 	//Set to CTC mode (clear timer on compare)
 	TCCR0A &= ~(1 << WGM00);
@@ -23,7 +26,11 @@ Pwm::Pwm(){
 }
 
 
-Pwm::Pwm(uint8_t outputCmp): Pwm(){
+Pwm::Pwm(uint8_t outputCmp, int timerNumber): Pwm(){
+
+}
+
+	
 	setCompare(outputCmp);
 }
 
@@ -33,8 +40,8 @@ void Pwm::setCompare(uint8_t cmp){
 
 void Pwm::enable(){
 	//Enable with 256 prescaler
-	TCCR0B |= (1 << CS02) | (1 << CS00);
-	TCCR0B &= ~(1 < CS01);
+	TCCR0B |= (1 << CS02);
+	TCCR0B &= ~((1 < CS01) | (1 << CS00));
 
 }
 

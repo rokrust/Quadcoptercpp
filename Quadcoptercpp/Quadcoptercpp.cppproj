@@ -174,6 +174,18 @@
     <Compile Include="main.cpp">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="motor.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="motor.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="motor_control.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="motor_control.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="MPU6050.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -184,6 +196,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="pwm.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pwm16.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pwm16.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="spi.cpp">

@@ -45,8 +45,3 @@ void Timer16::enable(){
 void Timer16::disable(){
 	TCCR1B &= ~((1 << CS12) | (1 << CS11) | (1 << CS10));
 }
-
-ISR(TIMER1_COMPA_vect){
-	
-	
-}

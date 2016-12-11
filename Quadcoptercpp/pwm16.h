@@ -1,32 +1,27 @@
-#ifndef PWM16_H
-#define PWM16_H
-
-
-#include "timer16.h"
-#include "adc.h"
-#include "MPU6050.h"
+#pragma once
 
 #include <stdio.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+
 
 //The top value of this 16bit can be changed to yield different frequencies
 //(Good for speakers hopefully)
 
 class Pwm16{
 private:
-	uint32_t topVal;
+	uint16_t topVal;
 	uint16_t outputCmp;
 
 public:
-	Pwm16::Pwm16();
+	Pwm16(uint16_t topVal, uint16_t outputCmp);
+	Pwm16();
 
-	Pwm16(uint32_t topVal, uint16_t outputCmp);
+	//Should probably scale this to the top value
+	void setCompare(int outputCmp){this->outputCmp = outputCmp;}
+	uint16_t getTopValue(){return topVal;}
 
 	void enable();
-
 	void disable();
 
 };
-
-#endif

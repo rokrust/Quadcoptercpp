@@ -15,6 +15,8 @@
 #include "lcd.h"
 #include "gps.h"
 #include "pwm.h"
+#include "pwm16.h"
+#include "motor.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -37,11 +39,19 @@ int main(void)
 	//Adc adc;
 	//GPS gps;
 	
-	Pwm pwm;
-	pwm.setCompare(100);
-	
+	//Motor motor(300);
+
+	Pwm16 pwm(255, 127);
 	pwm.enable();
-	_delay_ms(5000);
+	
+//	_delay_ms(3000);
+//	pwm.setCompare(16);
+
+//	_delay_ms(7000);
+	//_delay_ms(3000);
+	//pwm.setCompare(30);
+	//_delay_ms(3000);
+	//pwm.setCompare(22);
 	/*
 	lcd.writeString(0, 0, "AccX: ");
 	lcd.writeString(8, 0, "AccY: ");
@@ -59,9 +69,9 @@ int main(void)
 	//_delay_ms(5000);
 	//pwm.setCompare(100);
 	//_delay_ms(5000);
-	pwm.setCompare(50);
-	_delay_ms(5000);
-	pwm.setCompare(80);
+	//pwm.setCompare(50);
+	//_delay_ms(5000);
+	//pwm.setCompare(80);
 	while (1)
 	{	
 	_delay_us(10);	

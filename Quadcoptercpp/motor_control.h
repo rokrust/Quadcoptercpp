@@ -17,7 +17,7 @@ private:
 	
 public:
 	Motorcontrol();
-	calibrate_escs(); 
+	void calibrate_escs(); 
 
 };
 
