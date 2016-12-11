@@ -6,26 +6,20 @@
 
 #define F_CLOCK 16000000 //Should probably declare this in a designated header file
 
-//Gotta fix this overflow
-Motor::Motor(double pwm_freq){
-	int topVal = (int)(F_CLOCK/pwm_freq)-1;
-	printf("Topval: %d\n", topVal);
-	pwm = Pwm16(topVal, 0); //Start esc with lowest value
+
+Motor::Motor(){
 	
 
-}
-
-Motor::Motor(): Motor(0xffff){
-
-
 
 }
 
-//Should do some magic with the speed value.
-//Probably set 255 as maximum
+
+Motor::Motor(int motorNumber){
+	pwm = Pwm(motorNumber, 0x7f);
+
+}
+
+
 void Motor::setSpeed(int speed){
-	//Scale speed according to the topValue of the pwm
-	speed = (speed/MOTOR_MAX_SPEED)*pwm.getTopValue();
 
-	pwm.setCompare(speed);
 }

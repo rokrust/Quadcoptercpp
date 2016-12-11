@@ -41,38 +41,27 @@ int main(void)
 	
 	//Motor motor(300);
 
-	Pwm pwm(64, 0);
-	pwm.enable();
+	Pwm pwmArr[4];
+	for (int i = 0; i < 4; i++){
+		pwmArr[i] = Pwm(i, 128);
+		pwmArr[i].enable();
+	}
 
 	
 //	_delay_ms(3000);
-//	pwm.setCompare(16);
+	pwmArr[0].setCompare(128);
 
-//	_delay_ms(7000);
+	_delay_ms(3000);
 	//_delay_ms(3000);
-	//pwm.setCompare(30);
-	//_delay_ms(3000);
-	//pwm.setCompare(22);
+	pwmArr[0].setCompare(64);
+	_delay_ms(3000);
+	pwmArr[0].setCompare(100);
 	/*
 	lcd.writeString(0, 0, "AccX: ");
 	lcd.writeString(8, 0, "AccY: ");
 	lcd.writeString(16, 0, "AccZ: ");
 	*/
-	//pwm.setCompare(20);
-	//_delay_ms(5000);
-	//pwm.setCompare(20);
-	//_delay_ms(5000);
-	//pwm.setCompare(50);
-	//_delay_ms(5000);
-	//pwm.setCompare(200);
-	//_delay_ms(5000);
-	//pwm.setCompare(150);
-	//_delay_ms(5000);
-	//pwm.setCompare(100);
-	//_delay_ms(5000);
-	//pwm.setCompare(50);
-	//_delay_ms(5000);
-	//pwm.setCompare(80);
+
 	while (1)
 	{	
 	_delay_us(10);	
