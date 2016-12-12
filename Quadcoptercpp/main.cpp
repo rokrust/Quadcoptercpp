@@ -34,28 +34,13 @@ int main(void)
 	//Constructors
 	fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
 	USART_init(MYUBRR);
-	//MPU6050 mpu;
 	//Lcd lcd;
 	//Adc adc;
-	//GPS gps;
+	//MotorControl motorControl;
 	
-	//Motor motor(300);
-
-	Pwm pwmArr[4];
-	for (int i = 0; i < 4; i++){
-		pwmArr[i] = Pwm(i, 128);
-		pwmArr[i].enable();
-	}
-
 	
-//	_delay_ms(3000);
-	pwmArr[0].setCompare(128);
-
-	_delay_ms(3000);
-	//_delay_ms(3000);
-	pwmArr[0].setCompare(64);
-	_delay_ms(3000);
-	pwmArr[0].setCompare(100);
+	
+	
 	/*
 	lcd.writeString(0, 0, "AccX: ");
 	lcd.writeString(8, 0, "AccY: ");

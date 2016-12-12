@@ -1,5 +1,4 @@
-#ifndef __MPU6050_H__
-#define __MPU6050_H__ 
+#pragma once
 
 #include "TWI_master.h"
 
@@ -17,12 +16,13 @@
 class MPU6050{
 private:
 	TWI twi;
-	int sensorData[7];
-	int sensorOffset[7];
+	int sensorData[N_MESSURE_VAR];
+	int sensorOffset[N_MESSURE_VAR];
+	
+	void calibrateData();
 
 public:
 	MPU6050();
-	void update_movement();
+	void updateMovement();
 	int getMovementData(int index){return sensorData[index];}
 };
-#endif

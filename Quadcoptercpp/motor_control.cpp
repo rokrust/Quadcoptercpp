@@ -1,9 +1,28 @@
 ﻿#include "motor_control.h"
 
-Motorcontrol::Motorcontrol(){
+#include <util/delay.h>
+
+MotorControl::MotorControl(){
 	for(int i = 0; i < N_MOTORS; i++){
-		motors[i] = Motor(F_PWM); //Should find somewhere to put the esc frequency here
+		motors[i] = Motor(i);
 	}
 	
-	//Here comes a calibration part
+
+	calibrateEscs();
+}
+
+void MotorControl::calibrateEscs(){
+	//_delay_ms is ugly but should work nicely for initilization
+	//
+	for (int i = 0; i < 4; i++){
+		motors[i] = Motor();
+		motors[i].setSpeed(255);
+	}
+	_delay_ms(3000);
+
+	for (int i = 0; i < 4; i++){
+		motors[i].setSpeed(0);
+	}
+	_delay_ms(3000);
+
 }

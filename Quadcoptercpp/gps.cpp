@@ -17,9 +17,7 @@ void GPS::updateString(){
 
 	//Put every character from GPS into string
 	while(gpsTemp != '\n'){
-		gpsTemp = USART_receive();
-		gpsString[i] = gpsTemp;
-		i++;
+		gpsString[i++] = USART_receive();
 		printf("%c", gpsTemp);
 	}
 
