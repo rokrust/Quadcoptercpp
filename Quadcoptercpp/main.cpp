@@ -37,7 +37,7 @@ int main(void)
 	//Lcd lcd;
 	//Adc adc;
 	//MotorControl motorControl;
-	
+	MPU6050 mpu;
 	
 	
 	
@@ -49,7 +49,22 @@ int main(void)
 
 	while (1)
 	{	
-	_delay_us(10);	
+	_delay_ms(100);
+	int16_t* position = mpu.getPositionData();
+	int16_t* velocity = mpu.getVelocityData();
+	int16_t* acceleration = mpu.getAccelerationData();
+	
+	printf("Positions:\n");
+	printf("Translation:\tx: %d, y: %d, z: %d\n", position[0], position[1], position[2]);
+	printf("Angle:\tx: %d, y: %d, z: %d\n\n", position[3], position[4], position[5]);
+	printf("Velocity:\n");
+	printf("Translation:\tx: %d, y: %d, z: %d\n", velocity[0], velocity[1], velocity[2]);
+	printf("Angle:\tx: %d, y: %d, z: %d\n", velocity[3], velocity[4], velocity[5]);
+	printf("Acceleration\n");
+	printf("Translation:\tx: %d, y: %d, z: %d\n\n", acceleration[0], acceleration[1], acceleration[2]);
+
+	mpu.updateSensorValues();
+
 		//mpu.update_movement();
 		//gps.updateString();
 		//printf("%s", gps.getString());

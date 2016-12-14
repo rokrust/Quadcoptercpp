@@ -2,58 +2,74 @@
 #include "MPU6050.h"
 
 #include <stdio.h>
+#include <util/delay.h>
+
+void MPU6050::determineOffsetArray(){
+	unsigned char readArray[2*N_MESSURE_VAR];
+
+	twi.read_data_from_address(MPU_ADDRESS, ACC_X, readArray, 2*N_MESSURE_VAR);
+	
+	for(int i = 0; i < 2*N_MESSURE_VAR; i += 2){
+		sensorOffset[i/2] = (readArray[i] << 8) | readArray[i + 1];
+	}
+}
+
+void MPU6050::updateDataArrays(int16_t* sensorData){
+	for(int i = 0; i < N_TRANS_VAR; i++){
+		accelerationData[i] = sensorData[i];
+		velocityData[i] += (sensorData[i] * MS_SAMPLING_TIME)/1000;
+		positionData[i] += (velocityData[i]* MS_SAMPLING_TIME)/1000;
+
+		//Skip temperature data
+		velocityData[i + N_TRANS_VAR] = sensorData[i + N_TRANS_VAR + 1];
+		positionData[i + N_TRANS_VAR] = (velocityData[i + N_TRANS_VAR] * MS_SAMPLING_TIME)/1000;
+	}	
+}
+
 
 //Must be called after TWI_Master_intialize() and sei()
 MPU6050::MPU6050(){
-	//0x6B: power_management or something
-	//0: Wake up sensorboard.
+	determineOffsetArray();
+
+	for(int i = 0; i < N_MESSURE_VAR - 1; i++){
+		accelerationData[i % 3] = 0;
+		velocityData[i] = 0;
+		positionData[i] = 0;
+	}
+
 	unsigned char init_data[3] = {MPU_ADDRESS << 1 | WRITE_FLAG, PWR_MGMT_1, WAKE_UP};
 	printf("Initializing mpu..\n");
 	twi.start_transceiver_with_data(init_data, 3);
 	
 	//Read and store offset values
-	updateMovement();
-	for(int i = 0; i < N_MESSURE_VAR; i++){
-		sensorOffset[i] = sensorData[i];
-	}
+	updateSensorValues();
 
 }
 
-void MPU6050::updateMovement(){
-	//Every variable represented by two values (2 bytes)
-	//+1 for the MPU address
-	unsigned char movement_registers[2*N_MESSURE_VAR + 1];
+
+void MPU6050::updateSensorValues(){
+	//Every variable represented by two values (2 bytes), +1 for the MPU address
+	unsigned char movement_registers[2*N_MESSURE_VAR];
 	
-	//Set read register to ACC_X
-	//Put address in the first position and register
-	//to read from in the second.
-	movement_registers[0] = MPU_ADDRESS << 1 | WRITE_FLAG;
-	movement_registers[1] = ACC_X;
-	twi.start_transceiver_with_data(movement_registers, 2);
-
-	//Read the next fourteen values
-	movement_registers[0] |= READ_FLAG;
-	twi.start_transceiver_with_data(movement_registers, 2*N_MESSURE_VAR + 1);
-	twi.get_data_from_transceiver(movement_registers, 2*N_MESSURE_VAR + 1);
-
+	twi.read_data_from_address(MPU_ADDRESS, ACC_X, movement_registers, N_MESSURE_VAR*2);
+	
 	//Put high and low bytes (excluding address) into sensorData
-	for(int i = 1; i < 2*N_MESSURE_VAR; i += 2){
+	int16_t sensorData[N_MESSURE_VAR];
+	
+	for(int i = 0; i < 2*N_MESSURE_VAR; i += 2){
 		sensorData[i/2] = movement_registers[i] << 8 | movement_registers[i + 1];
 	}
 
 	//Add/subtract offset
-	calibrateData();
+	calibrateData(sensorData);
+
+	updateDataArrays(sensorData);
+
 }
 
-void MPU6050::calibrateData(){
+void MPU6050::calibrateData(int16_t* sensorData){
 	for(int i = 0; i < N_MESSURE_VAR; i++){
-		if(sensorOffset[i] < 0){
-			sensorData[i] += sensorOffset[i];
-		}
-
-		else{
-			sensorData[i] -= sensorOffset[i];
-		}
+		sensorData[i] -= sensorOffset[i];
 	}
 }
 

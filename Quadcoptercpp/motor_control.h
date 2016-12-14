@@ -14,8 +14,16 @@ private:
 	MPU6050 mpu;
 	GPS gps;
 	
+	int8_t xAngleRef, yAngleRef, zAngleRef;
+	void determineMotorInputs();
 public:
 	MotorControl();
+
 	void calibrateEscs();
 	
+	int8_t setXAngleRef(){ return xAngleRef; }
+	int8_t setYAngleRef(){ return yAngleRef; }
+	int8_t setZAngleRef(){ return zAngleRef; }
+	
+	void setMotorInputs(uint8_t z_trans, uint8_t  x_rot, uint8_t y_rot, uint8_t z_rot);
 };

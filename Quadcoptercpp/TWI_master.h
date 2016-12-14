@@ -61,6 +61,8 @@ public:
 	void start_transceiver_with_data( unsigned char * , unsigned char );
 	void start_transceiver( void );
 	unsigned char get_data_from_transceiver( unsigned char *, unsigned char );
+
+	void read_data_from_address(unsigned char, unsigned char, unsigned char*, unsigned char);
 };
 
 /****************************************************************************

@@ -71,6 +71,25 @@ unsigned char TWI::get_state_info( void )
 	return ( TWI_state );                         // Return error state.
 }
 
+void TWI::read_data_from_address(unsigned char chip_address, unsigned char register_address, unsigned char* msg, unsigned char msgSize){
+	//Put address in the first position and read register
+	//in the second.
+	unsigned char temp[msgSize+1];
+	temp[0] = chip_address << 1 | WRITE_FLAG;
+	temp[1] = register_address;
+	start_transceiver_with_data(temp, 2);
+
+	temp[0] = chip_address << 1 | READ_FLAG;
+
+	start_transceiver_with_data(temp, msgSize + 1);
+	get_data_from_transceiver(temp, msgSize + 1);
+	
+	for(int i = 0; i < msgSize; i++){
+		msg[i] = temp[i+1];
+	}
+}
+
+
 /****************************************************************************
 Call this function to send a prepared message. The first byte must contain the slave address and the
 read/write bit. Consecutive bytes contain the data to be sent, or empty locations for data to be read
