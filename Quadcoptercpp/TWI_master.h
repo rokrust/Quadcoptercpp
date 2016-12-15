@@ -63,6 +63,7 @@ public:
 	unsigned char get_data_from_transceiver( unsigned char *, unsigned char );
 
 	void read_data_from_address(unsigned char, unsigned char, unsigned char*, unsigned char);
+	void write_data_to_register(unsigned char, unsigned char, unsigned char);
 };
 
 /****************************************************************************

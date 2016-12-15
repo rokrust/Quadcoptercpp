@@ -12,20 +12,22 @@ class MotorControl{
 private:
 	Motor motors[N_MOTORS];	
 	MPU6050 mpu;
-	GPS gps;
+	//GPS gps;
 	
-	int8_t xAngleRef, yAngleRef, zAngleRef, zTranslationRef;
-	uint8_t Kp_xr, Kp_yr, Kp_zr, Kp_zt;
+	int8_t xmAngleRef, ymAngleRef, zmAngleRef, zTranslationRef;
+	uint16_t Kp_xr, Kp_yr, Kp_zr, Kp_zt;
 
-	void determineMotorInputs();
 public:
 	MotorControl();
 
+	void determineMotorInputs();
+
 	void calibrateEscs();
-	
-	int8_t setXAngleRef(){ return xAngleRef; }
-	int8_t setYAngleRef(){ return yAngleRef; }
-	int8_t setZAngleRef(){ return zAngleRef; }
+	void startUpSequence();
+
+	int8_t setXAngleRef(){ return xmAngleRef; }
+	int8_t setYAngleRef(){ return ymAngleRef; }
+	int8_t setZAngleRef(){ return zmAngleRef; }
 	
 	void setMotorInputs(uint8_t z_trans, uint8_t  x_rot, uint8_t y_rot, uint8_t z_rot);
 };

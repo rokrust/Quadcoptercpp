@@ -12,23 +12,28 @@ void MPU6050::determineOffsetArray(){
 	for(int i = 0; i < 2*N_MESSURE_VAR; i += 2){
 		sensorOffset[i/2] = (readArray[i] << 8) | readArray[i + 1];
 	}
+
+	//Set downwards to be the negative direction
+	sensorOffset[2] += g_SENSOR_VALUE;
 }
 
 void MPU6050::updateDataArrays(int16_t* sensorData){
 	for(int i = 0; i < N_TRANS_VAR; i++){
 		accelerationData[i] = sensorData[i];
-		velocityData[i] += (sensorData[i] * MS_SAMPLING_TIME)/1000;
-		positionData[i] += (velocityData[i]* MS_SAMPLING_TIME)/1000;
+		velocityData[i] += sensorData[i]/SAMPLING_TIME;
+		positionData[i] += velocityData[i]/SAMPLING_TIME;
 
 		//Skip temperature data
 		velocityData[i + N_TRANS_VAR] = sensorData[i + N_TRANS_VAR + 1];
-		positionData[i + N_TRANS_VAR] = (velocityData[i + N_TRANS_VAR] * MS_SAMPLING_TIME)/1000;
+		positionData[i + N_TRANS_VAR] = velocityData[i + N_TRANS_VAR]/SAMPLING_TIME;
 	}	
 }
 
 
 //Must be called after TWI_Master_intialize() and sei()
 MPU6050::MPU6050(){
+	printf("Initializing MPU..\n");
+	
 	determineOffsetArray();
 
 	for(int i = 0; i < N_MESSURE_VAR - 1; i++){
@@ -37,13 +42,18 @@ MPU6050::MPU6050(){
 		positionData[i] = 0;
 	}
 
-	unsigned char init_data[3] = {MPU_ADDRESS << 1 | WRITE_FLAG, PWR_MGMT_1, WAKE_UP};
-	printf("Initializing mpu..\n");
-	twi.start_transceiver_with_data(init_data, 3);
+	//exit standby mode
+	twi.write_data_to_register(MPU_ADDRESS, PWR_MGMT_1, WAKE_UP);
+	
+	//set gyro sensitivity
+	twi.write_data_to_register(MPU_ADDRESS, GYRO_CONFIG, DEG_S_1000);
+	
+	//Set acceleration sensitivity
+	twi.write_data_to_register(MPU_ADDRESS, ACCEL_CONFIG, M_S2_2G);
 	
 	//Read and store offset values
 	updateSensorValues();
-
+	printf("MPU initialized!\n");
 }
 
 
@@ -55,14 +65,12 @@ void MPU6050::updateSensorValues(){
 	
 	//Put high and low bytes (excluding address) into sensorData
 	int16_t sensorData[N_MESSURE_VAR];
-	
 	for(int i = 0; i < 2*N_MESSURE_VAR; i += 2){
 		sensorData[i/2] = movement_registers[i] << 8 | movement_registers[i + 1];
 	}
 
 	//Add/subtract offset
 	calibrateData(sensorData);
-
 	updateDataArrays(sensorData);
 
 }

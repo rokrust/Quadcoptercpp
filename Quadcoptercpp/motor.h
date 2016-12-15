@@ -13,5 +13,5 @@ public:
 	Motor();
 	Motor(int motorNumber);
 	
-	void setSpeed(uint8_t speed);
+	void setSpeed(int8_t speed);
 };

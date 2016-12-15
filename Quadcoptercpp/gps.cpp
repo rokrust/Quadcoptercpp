@@ -25,6 +25,7 @@ void GPS::updateString(){
 }
 
 GPS::GPS(){
+	printf("Initializing GPS.. (If the program hangs, you've probably forgot to connect the UART)\n");
 	for(int i = 0; i < STRLEN; i++){
 		homeString[i] = 'q';
 		gpsString[i] = 'q';
@@ -35,4 +36,5 @@ GPS::GPS(){
 	for(int i = 0; gpsString[i] != '\0'; i++){
 		homeString[i] = gpsString[i];
 	}
+	printf("GPS initialized!\n");
 }
