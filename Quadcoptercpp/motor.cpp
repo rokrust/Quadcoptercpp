@@ -36,7 +36,7 @@ void Motor::setSpeed(int8_t speed){
 	uint8_t divisionFactor = (MOTOR_MAX_SPEED+1)/ESC_PWM_RESOLUTION;
 	uint8_t pwmValue = (temp+MOTOR_MAX_SPEED)/divisionFactor + ESC_PWM_MIN; //scale and move min value
 
-	//printf("Pwm value: %d\n", pwmValue);
+	printf("Pwm value: %d\n", pwmValue);
 
 	pwm.setCompare(pwmValue);
 }

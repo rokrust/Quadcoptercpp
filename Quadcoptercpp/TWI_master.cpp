@@ -161,7 +161,7 @@ void TWI::read_data_from_address(unsigned char chip_address, unsigned char regis
 
 
 void TWI::write_data_to_register(unsigned char chip_address, unsigned char register_address, unsigned char value){
-	unsigned char temp[3] = {(chip_address << 1) | WRITE_FLAG, register_address, value};
+	unsigned char temp[3] = {chip_address << 1 | WRITE_FLAG, register_address, value};
 	start_transceiver_with_data(temp, 3);
 }
 

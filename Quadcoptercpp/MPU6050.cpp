@@ -25,8 +25,8 @@ void MPU6050::updateDataArrays(int16_t* sensorData){
 
 		//Skip temperature data
 		velocityData[i + N_TRANS_VAR] = sensorData[i + N_TRANS_VAR + 1];
-		positionData[i + N_TRANS_VAR] = velocityData[i + N_TRANS_VAR]/SAMPLING_TIME;
-	}	
+		positionData[i + N_TRANS_VAR] += velocityData[i + N_TRANS_VAR]/SAMPLING_TIME;
+	}
 }
 
 

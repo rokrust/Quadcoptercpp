@@ -2,7 +2,7 @@
 
 #include <util/delay.h>
 
-MotorControl::MotorControl(): xmAngleRef(0), ymAngleRef(0), zmAngleRef(0), zTranslationRef(0){
+MotorControl::MotorControl(): xAngleRef(0), yAngleRef(0), zAngleRef(0), zTranslationRef(0){
 	
 	printf("Initializing motors..\n");
 	for(int i = 0; i < N_MOTORS; i++){
@@ -10,10 +10,10 @@ MotorControl::MotorControl(): xmAngleRef(0), ymAngleRef(0), zmAngleRef(0), zTran
 	}
 	printf("Motors initialized!\n");
 
-	Kp_xr = 260; 
-	Kp_yr = 260; 
-	Kp_zr = 260; 
-	Kp_zt = 260;
+	Kp_xr = 4; 
+	Kp_yr = 4; 
+	Kp_zr = 4; 
+	Kp_zt = 320;
 	printf("Calibrating escs..\n");
 	calibrateEscs();
 	printf("Escs calibrated!\n");
@@ -24,13 +24,14 @@ void MotorControl::determineMotorInputs(){
 	//Divide by controller parameters to avoid 
 	//floating point multiplication
 	mpu.updateSensorValues();
-	int16_t* positionData = mpu.getPositionData();
-	int8_t u_xr = (xmAngleRef - positionData[3])/Kp_xr;
-	int8_t u_yr = (ymAngleRef - positionData[4])/Kp_yr;
-	int8_t u_zr = (zmAngleRef - positionData[5])/Kp_zr;
-	int8_t u_zt = (zTranslationRef - mpu.getZTranslation())/Kp_zt;
-	printf("u_xr: %d, u_yr: %d, u_zr: %d, u_zt: %d\n", positionData[3], positionData[4], positionData[5], u_zt);
-	setMotorInputs(u_xr, u_yr, u_zr, u_zt);	
+	
+	int8_t u_xr = (xAngleRef - mpu.getXRotationDegrees())*Kp_xr;
+	int8_t u_yr = (yAngleRef - mpu.getYRotationDegrees())*Kp_yr;
+	int8_t u_zr = (zAngleRef - mpu.getZRotationDegrees())*Kp_zr;
+	int8_t u_zt = 70;//(zTranslationRef - mpu.getZTranslation())/Kp_zt;
+	printf("u_xr: %d, u_yr: %d, u_zr: %d, u_zt: %d\n", u_xr, u_yr, u_zr, u_zt);
+	setMotorInputs(u_xr, u_yr, u_zr, u_zt);
+	//printf("Angle x: %d, y: %d, z: %d\n", mpu.getXRotationDegrees(), mpu.getYRotationDegrees(), mpu.getZRotationDegrees());	
 }
 
 void MotorControl::startUpSequence(){

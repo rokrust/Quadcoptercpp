@@ -29,6 +29,8 @@
 #define N_ROT_VAR 3
 #define N_MESSURE_VAR 7 //Acceleration, angular velocity and temperature
 #define g_SENSOR_VALUE 16384
+#define MAX_SENSOR_VALUE 32767
+#define MAX_ANGLE_RANGE 1000
 
 #define SAMPLING_TIME 100 //Avoid float arithmetic
 
@@ -52,10 +54,15 @@ public:
 	int16_t* getAccelerationData(){return accelerationData;}
 	int16_t* getVelocityData(){return velocityData;}
 	int16_t* getPositionData(){return positionData;}
+	
 	int16_t getXTranslation(){return positionData[0];}
 	int16_t getYTranslation(){return positionData[1];}
 	int16_t getZTranslation(){return positionData[2];}
 	int16_t getXRotation(){return positionData[3];}
 	int16_t getYRotation(){return positionData[4];}
 	int16_t getZRotation(){return positionData[5];}
+
+	int16_t getXRotationDegrees(){return ((int32_t)positionData[3]*MAX_ANGLE_RANGE)/MAX_SENSOR_VALUE;}
+	int16_t getYRotationDegrees(){return ((int32_t)positionData[4]*MAX_ANGLE_RANGE)/MAX_SENSOR_VALUE;}
+	int16_t getZRotationDegrees(){return ((int32_t)positionData[5]*MAX_ANGLE_RANGE)/MAX_SENSOR_VALUE;}
 };
