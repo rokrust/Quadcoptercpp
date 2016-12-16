@@ -28,7 +28,6 @@
 #include <stdio.h>
 #include <util/delay.h>
 #include "TWI_Master.h"
-#include "MPU6050.h"
 
 static unsigned char TWI_buf[ TWI_BUFFER_SIZE ];    // Transceiver buffer
 static unsigned char TWI_msgSize;                   // Number of bytes to be transmitted.

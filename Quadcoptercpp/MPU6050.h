@@ -22,9 +22,6 @@
 	#define M_S2_8G 16
 	#define M_S2_16G 24
 
-#define WRITE_FLAG 0
-#define READ_FLAG 1
-
 #define N_TRANS_VAR 3
 #define N_ROT_VAR 3
 #define N_MESSURE_VAR 7 //Acceleration, angular velocity and temperature

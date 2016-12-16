@@ -14,8 +14,12 @@ private:
 	MPU6050 mpu;
 	//GPS gps;
 	
-	int8_t xAngleRef, yAngleRef, zAngleRef, zTranslationRef;
+	int8_t xAngleRef, yAngleRef, zAngleRef;
+	int16_t zTranslationRef;
 	uint16_t Kp_xr, Kp_yr, Kp_zr, Kp_zt;
+
+	uint8_t max(uint8_t a, uint8_t b); //To avoid negative values
+	uint8_t saturate(uint16_t value, uint8_t limit); //To avoid too large values
 
 public:
 	MotorControl();

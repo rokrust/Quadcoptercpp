@@ -29,16 +29,13 @@
 
 int main(void)
 {
-	//MPU variables
-	//char numberArray[10];
-
+	//_delay_ms(5000);
 	//Constructors
 	fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
 	USART_init(MYUBRR);
 	//Lcd lcd;
 	//Adc adc;
 	//MotorControl motorControl;
-	//MPU6050 mpu;
 	
 	
 	
@@ -47,9 +44,12 @@ int main(void)
 	lcd.writeString(8, 0, "AccY: ");
 	lcd.writeString(16, 0, "AccZ: ");
 	*/
-	printf("Gonna make an object\n");
 	MotorControl motorcontrol;
-	printf("Made an object\n");
+	/*Pwm pwm(3);
+	pwm.setCompare(128);
+	pwm.enable();
+	_delay_ms(3000);
+	pwm.setCompare(64);*/
 	while (1)
 	{
 	_delay_ms(10);
