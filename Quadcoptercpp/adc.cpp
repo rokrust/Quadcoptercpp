@@ -1,6 +1,6 @@
 ﻿#include "adc.h"
 #include <avr/io.h>
-
+#include <stdio.h>
 Adc::Adc(){
 	DDRC &= ~(1 << DDC0); //Might not be needed
 	
@@ -16,16 +16,16 @@ Adc::Adc(){
 	ADCSRB &= ~(1 << ADTS2);
 }
 
-char Adc::read(char ch){
+char Adc::read(unsigned char ch){
+	//Read from channel ch
+	ADMUX |= ch;
+
 	//Start conversion
 	ADCSRA |= (1 << ADSC);
 	while(ADCSRA & (1 << ADSC)){;}
 	
-	//Read from channel ch
-	ADMUX |= ch;
 	char adc_value = ADCH;
 	ADMUX ^= ch;
-
 	
 	return adc_value;
 }

@@ -18,6 +18,7 @@
 #include "pwm16.h"
 #include "motor.h"
 #include "motor_control.h"
+#include "joystick.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -34,9 +35,8 @@ int main(void)
 	fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
 	USART_init(MYUBRR);
 	//Lcd lcd;
-	//Adc adc;
 	//MotorControl motorControl;
-	
+	Joystick joystick;
 	
 	
 	/*
@@ -44,30 +44,23 @@ int main(void)
 	lcd.writeString(8, 0, "AccY: ");
 	lcd.writeString(16, 0, "AccZ: ");
 	*/
-	MotorControl motorcontrol;
-	/*Pwm pwm(3);
-	pwm.setCompare(128);
-	pwm.enable();
-	_delay_ms(3000);
-	pwm.setCompare(64);*/
+	//DDRD &= ~(1 << PIND7);
+	//unsigned char s[100];
+
 	while (1)
 	{
+	//USART_transmit_string("Hello world\n");
+	//USART_recieve_string(s);
+	//printf("%s", s);
+	USART_transmit(joystick.readX());
+	//char c = USART_receive();
+	//printf("Joystick: %d\n", USART_receive());
+	
+	//printf("Joystick input: %d\n", (PIND & (1 << PIND7)) >> PIND7);
+	//printf("Joystick x: %d\n", joystick.readX());
+	//printf("Joystick y: %d\n\n", joystick.readY());
 	_delay_ms(10);
-	motorcontrol.determineMotorInputs();
-	//int16_t* position = mpu.getPositionData();
-	//int16_t* velocity = mpu.getVelocityData();
-	//int16_t* acceleration = mpu.getAccelerationData();
-
-	//printf("Positions:\n");
-	//printf("Translation:\tx: %d, y: %d, z: %d\n", position[0], position[1], position[2]);
-	//printf("Angle:\tx: %d, y: %d, z: %d\n\n", position[3], position[4], position[5]);
-	//printf("Velocity:\n");
-	//printf("Translation:\tx: %d, y: %d, z: %d\n", velocity[0], velocity[1], velocity[2]);
-	//printf("Angle:\tx: %d, y: %d, z: %d\n\n", velocity[3], velocity[4], velocity[5]);
-	//printf("acc_z: %d\n", acceleration[2]);
-	//printf("Acceleration\n");
-	//printf("Translation:\tx: %d, y: %d, z: %d\n\n", acceleration[0], acceleration[1], acceleration[2]);
-
+	//motorcontrol.determineMotorInputs();
 	
 		//mpu.update_movement();
 		//gps.updateString();

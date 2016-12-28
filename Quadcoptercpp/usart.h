@@ -1,5 +1,4 @@
-#ifndef __USART_H__
-#define __USART_H__
+#pragma once
 
 #define BAUD 9600
 #define F_CPU 16000000
@@ -16,4 +15,6 @@ void USART_init(unsigned int ubrr);
 void USART_transmit(unsigned char data);
 unsigned char USART_receive(void);
 
-#endif
+void USART_transmit_string(const char* s);
+unsigned char* USART_recieve_string(unsigned char* s);
+

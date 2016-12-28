@@ -31,3 +31,19 @@ unsigned char USART_receive(void){
 	/*Get and return received data from buffer*/
 	return UDR0;
 }
+
+void USART_transmit_string(const char* s){
+	for(int i = 0; s[i] != '\0'; i++){
+		USART_transmit(s[i]);
+	}
+	USART_transmit('\0');
+}
+
+unsigned char* USART_recieve_string(unsigned char* s){
+	
+	for(int i = 0; s[i] != '\0'; i++){
+		s[i] = USART_receive();
+	}
+
+	return s;
+}
