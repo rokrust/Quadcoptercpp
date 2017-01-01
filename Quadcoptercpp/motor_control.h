@@ -29,9 +29,9 @@ public:
 	void calibrateEscs();
 	void startUpSequence();
 
-	int8_t setXAngleRef(){ return xAngleRef; }
-	int8_t setYAngleRef(){ return yAngleRef; }
-	int8_t setZAngleRef(){ return zAngleRef; }
+	int8_t getXAngleRef(){ return xAngleRef; }
+	int8_t getYAngleRef(){ return yAngleRef; }
+	int8_t getZAngleRef(){ return zAngleRef; }
 	
 	void setMotorInputs(uint8_t z_trans, uint8_t  x_rot, uint8_t y_rot, uint8_t z_rot);
 };

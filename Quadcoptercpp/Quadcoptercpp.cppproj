@@ -165,6 +165,12 @@
     <Compile Include="gps.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="joystick.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="joystick.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="lcd.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -192,6 +198,12 @@
     <Compile Include="MPU6050.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="NRF24L01.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="NRF24L01.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="pwm.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -202,6 +214,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="pwm16.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="radiocontroller.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="radiocontroller.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="spi.cpp">

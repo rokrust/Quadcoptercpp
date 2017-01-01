@@ -16,8 +16,9 @@ MotorControl::MotorControl(): xAngleRef(0), yAngleRef(0), zAngleRef(0), zTransla
 	Kp_zt = 320;
 	printf("Calibrating escs..\n");
 	//startUpSequence();
+	//_delay_ms(10000);
 	calibrateEscs();
-	_delay_ms(10000);
+	
 	printf("Escs calibrated!\n");
 }
 
@@ -88,10 +89,10 @@ void MotorControl::setMotorInputs(uint8_t z_trans, uint8_t  x_rot, uint8_t y_rot
 	for(int i = 0; i < N_MOTORS; i++){
 		motorInput[i] = max(motorInput[i], 0);
 		motorInput[i] = saturate(motorInput[i], 255);
-		printf("Motor %d: %d |", i, motorInput[i]);
+		//printf("Motor %d: %d |", i, motorInput[i]);
 		motors[i].setSpeed(motorInput[i]);
 	}
-	printf("\n");
+	//printf("\n");
 }
 
 

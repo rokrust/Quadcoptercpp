@@ -36,7 +36,7 @@ int main(void)
 	USART_init(MYUBRR);
 	//Lcd lcd;
 	//MotorControl motorControl;
-	Joystick joystick;
+	//Joystick joystick;
 	
 	
 	/*
@@ -44,29 +44,18 @@ int main(void)
 	lcd.writeString(8, 0, "AccY: ");
 	lcd.writeString(16, 0, "AccZ: ");
 	*/
-	//DDRD &= ~(1 << PIND7);
-	//unsigned char s[100];
+	
 
 	while (1)
 	{
-	//USART_transmit_string("Hello world\n");
-	//USART_recieve_string(s);
-	//printf("%s", s);
-	USART_transmit(joystick.readX());
-	//char c = USART_receive();
-	//printf("Joystick: %d\n", USART_receive());
 	
-	//printf("Joystick input: %d\n", (PIND & (1 << PIND7)) >> PIND7);
-	//printf("Joystick x: %d\n", joystick.readX());
-	//printf("Joystick y: %d\n\n", joystick.readY());
+	//printf("Test: %d\n", USART_receive());
+	//unsigned char a = joystick.readX();
+	//USART_transmit(a);
+	//printf("joystick: %d\n", a);
+	
+	//motorControl.determineMotorInputs();
 	_delay_ms(10);
-	//motorcontrol.determineMotorInputs();
-	
-		//mpu.update_movement();
-		//gps.updateString();
-		//printf("%s", gps.getString());
-		//printf("%c", USART_receive());
-		
 		//sprintf(numberArray, "%d", mpu.getMovementData(0));
 		//lcd.writeString(0, 48, numberArray);
 		//sprintf(numberArray, "%d", mpu.getMovementData(1));
