@@ -19,6 +19,7 @@
 #include "motor.h"
 #include "motor_control.h"
 #include "joystick.h"
+#include "NRF24L01.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -37,8 +38,10 @@ int main(void)
 	//Lcd lcd;
 	//MotorControl motorControl;
 	//Joystick joystick;
-	
-	
+	NRF24L01 radioController;
+	uint8_t joystick_data[2];
+	Adc adc;
+
 	/*
 	lcd.writeString(0, 0, "AccX: ");
 	lcd.writeString(8, 0, "AccY: ");
@@ -48,6 +51,12 @@ int main(void)
 
 	while (1)
 	{
+	_delay_ms(200);
+	joystick_data[0] = adc.read(0);
+	joystick_data[1] = adc.read(1);
+	//printf("x: %d, y: %d\n", joystick_data[0], joystick_data[1]);
+	radioController.transmit(joystick_data);
+	
 	
 	//printf("Test: %d\n", USART_receive());
 	//unsigned char a = joystick.readX();
@@ -55,7 +64,6 @@ int main(void)
 	//printf("joystick: %d\n", a);
 	
 	//motorControl.determineMotorInputs();
-	_delay_ms(10);
 		//sprintf(numberArray, "%d", mpu.getMovementData(0));
 		//lcd.writeString(0, 48, numberArray);
 		//sprintf(numberArray, "%d", mpu.getMovementData(1));
