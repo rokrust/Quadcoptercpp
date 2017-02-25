@@ -50,9 +50,9 @@
 #define RX_PW_P0 0x11
 #define RX_ADDR_P0 0x0A
 
-#define SS 2
+#define SS 2 //Also known as CSN
 #define CE 0
-#define RST 1
+#define RST 1 //Unused
 
 //USES STATIC PAYLOAD LENGTH
 class NRF24L01{
@@ -61,7 +61,7 @@ private:
 	uint8_t config_register;
 
 	void readNrf(uint8_t reg, uint8_t* val, uint8_t nBytes);
-	void writeNrf(uint8_t reg, uint8_t* val, uint8_t nBytes);
+	void writeNrf(uint8_t reg, uint8_t* val, uint8_t nBytes = 1);
 	void setRxMode();
 	void setTxMode();
 

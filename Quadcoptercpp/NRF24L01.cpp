@@ -14,17 +14,17 @@ NRF24L01::NRF24L01(){
 	
 	//Enable datapipe 0
 	data[0] = (1 << ERX_P0);
-	writeNrf(EN_RXADDR, data, 1);
+	writeNrf(EN_RXADDR, data);
 
 	//Enable auto ACK
 	data[0] = (1 << ENAA_P0);
-	writeNrf(EN_AA, data, 1);
+	writeNrf(EN_AA, data);
 
 	//Set pipe address width
 	data[0] = (1 << _5_BYTES);
-	writeNrf(SETUP_AW, data, 1);
+	writeNrf(SETUP_AW, data);
 
-	//Set pipe 0 5 byte address
+	//Set pipe 0 address
 	for(int i = 0; i < ADDRESS_WIDTH; i++){
 		data[i] = P0_LSB_ADDRESS;
 	}
@@ -34,30 +34,31 @@ NRF24L01::NRF24L01(){
 
 	//Set Payload width
 	data[0] = PAYLOAD_WIDTH;
-	writeNrf(RX_PW_P0, data, 1);
+	writeNrf(RX_PW_P0, data);
 
 	//Set number of retransmits and interval between them
 	data[0] = RETRANSMIT_3_250_US;
-	writeNrf(SETUP_RETR, data, 1);
+	writeNrf(SETUP_RETR, data);
 	
 
 	//Power up radio controller, enable CRC and empty FIFO'S
 	data[0] = (1 << PWR_UP) | (1 << EN_CRC);
-	writeNrf(CONFIG, data, 1);
+	writeNrf(CONFIG, data);
 
 	//Give NRF time to reach standby mode (1.5 ms)
 	_delay_ms(10);
 }
 
 void NRF24L01::writeNrf(uint8_t command, uint8_t* val, uint8_t nBytes){
+		_delay_us(10);
 		PORTB &= ~(1 << SS);
-
+		_delay_us(10);
 		spi.transmit(command);
-
+		_delay_us(10);
 		for(int i = 0; i < nBytes; i++){
 			spi.transmit(val[i]);
 		}
-
+		_delay_us(10);
 		PORTB |= (1 << SS);
 
 
@@ -65,41 +66,45 @@ void NRF24L01::writeNrf(uint8_t command, uint8_t* val, uint8_t nBytes){
 
 void NRF24L01::readNrf(uint8_t command, uint8_t* val, uint8_t nBytes){
 	PORTB &= ~(1 << SS);
-
+	_delay_us(10);
 	spi.transmit(command);
-
+	_delay_us(10);
 	for(int i = 0; i < nBytes; i++){
 		val[i] = spi.transmit(NOP);
 	}
-
+	_delay_us(10);
 	PORTB |= (1 << SS);
 }
 
 void NRF24L01::setRxMode(){
 	PORTB &= ~(1 << SS);
-
+	_delay_us(10);
 	uint8_t configReg = spi.transmit(CONFIG);
 	configReg |= (1 << PRIM_RX);
+	_delay_us(10);
 	spi.transmit(configReg);
-
+	_delay_us(10);
 	PORTB |= (1 << SS);
 }
 
 void NRF24L01::setTxMode(){
 	PORTB &= ~(1 << SS);
-	
+	_delay_us(10);
 	uint8_t configReg = spi.transmit(CONFIG);
 	configReg &= ~(1 << PRIM_RX);
+	_delay_us(10);
 	spi.transmit(configReg);
-
+	_delay_us(10);
 	PORTB |= (1 << SS);
 }
 
 void NRF24L01::transmit(uint8_t* data){
 	writeNrf(FLUSH_TX, NULL, 0);
+	_delay_us(10);
 	writeNrf(W_TX_PAYLOAD, data, PAYLOAD_WIDTH);
+	_delay_us(10);
 	setTxMode();
-
+	_delay_us(10);
 	PORTB |= (1 << CE);
 	_delay_us(20); //Should probably fix this
 	PORTB &= ~(1 << CE);

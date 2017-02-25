@@ -31,14 +31,13 @@
 
 int main(void)
 {
-	//_delay_ms(5000);
 	//Constructors
 	fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
 	USART_init(MYUBRR);
 	//Lcd lcd;
 	//MotorControl motorControl;
 	//Joystick joystick;
-	NRF24L01 radioController;
+	//NRF24L01 radioController;
 	uint8_t joystick_data[2];
 	Adc adc;
 
@@ -51,11 +50,11 @@ int main(void)
 
 	while (1)
 	{
-	_delay_ms(200);
+	//_delay_ms(200);
 	joystick_data[0] = adc.read(0);
 	joystick_data[1] = adc.read(1);
-	//printf("x: %d, y: %d\n", joystick_data[0], joystick_data[1]);
-	radioController.transmit(joystick_data);
+	printf("x: %d, y: %d\n", joystick_data[0], joystick_data[1]);
+	//radioController.transmit(joystick_data);
 	
 	
 	//printf("Test: %d\n", USART_receive());
