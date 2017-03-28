@@ -7,7 +7,8 @@
 Spi::Spi()
 {
 	/* Set MOSI and SCK output, all others input */
-	DDRB = (1<<PORTB3)|(1<<PORTB5)| (1 << PORTB2);
+	DDRB = (1 << MOSI)|(1 << SCK)|(1 << SS);
+	DDRB &= ~(1 << MISO);
 	/* Enable SPI, Master, set clock rate fck/16 */
 	/* Sample at rising edge					 */
 	SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);

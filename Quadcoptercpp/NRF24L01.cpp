@@ -7,6 +7,7 @@
 
 
 NRF24L01::NRF24L01(){
+	//Stores data to be written to registers
 	uint8_t data[10];
 
 	DDRB |= (1 << CE) | (1 << RST);
@@ -50,16 +51,16 @@ NRF24L01::NRF24L01(){
 }
 
 void NRF24L01::writeNrf(uint8_t command, uint8_t* val, uint8_t nBytes){
-		_delay_us(10);
-		PORTB &= ~(1 << SS);
-		_delay_us(10);
-		spi.transmit(command);
-		_delay_us(10);
-		for(int i = 0; i < nBytes; i++){
-			spi.transmit(val[i]);
-		}
-		_delay_us(10);
-		PORTB |= (1 << SS);
+	_delay_us(10);
+	PORTB &= ~(1 << SS);
+	_delay_us(10);
+	spi.transmit(command);
+	_delay_us(10);
+	for(int i = 0; i < nBytes; i++){
+		spi.transmit(val[i]);
+	}
+	_delay_us(10);
+	PORTB |= (1 << SS);
 
 
 }
