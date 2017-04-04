@@ -34,6 +34,40 @@ int main(void)
 	//Constructors
 	fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
 	USART_init(MYUBRR);
+	NRF24L01 nrf;
+
+	uint8_t val[PAYLOAD_WIDTH];
+	while (1)
+	{
+		//Recieve
+		/*
+		nrf.listen();
+		_delay_ms(100);
+		nrf.recieve(val);
+		printf("Val 1: %d, Val 2: %d\n", val[0], val[1]);
+		_delay_ms(100);
+		*/
+		
+		//Transmit
+		
+		val[0] = 127;
+		val[1] = 10;
+		nrf.transmit(val);
+		_delay_ms(50);
+		
+	}
+
+}
+
+
+//OLD MAIN
+
+/*
+int main(void)
+{
+	//Constructors
+	fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
+	USART_init(MYUBRR);
 	//Lcd lcd;
 	//MotorControl motorControl;
 	//Joystick joystick;
@@ -41,11 +75,11 @@ int main(void)
 	//uint8_t joystick_data[2];
 	//Adc adc;
 
-	/*
-	lcd.writeString(0, 0, "AccX: ");
-	lcd.writeString(8, 0, "AccY: ");
-	lcd.writeString(16, 0, "AccZ: ");
-	*/
+	
+	//lcd.writeString(0, 0, "AccX: ");
+	//lcd.writeString(8, 0, "AccY: ");
+	//lcd.writeString(16, 0, "AccZ: ");
+	
 	
 
 	while (1)
@@ -70,4 +104,4 @@ int main(void)
 		//lcd.writeString(16, 48, numberArray);
 
 	}
-}
+}*/

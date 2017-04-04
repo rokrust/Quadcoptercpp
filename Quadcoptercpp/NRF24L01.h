@@ -2,14 +2,15 @@
 #include <stdint.h>
 #include <avr/interrupt.h>
 
+#define NRF_WRITE_FLAG 0x20
 #define PAYLOAD_WIDTH 2 //Number of bytes in payload
 #define ADDRESS_WIDTH 5 //Number of bytes in address
 #define P0_LSB_ADDRESS 0x12
 
-#define R_RX_PAYLOAD 0x61 //Read
-#define W_TX_PAYLOAD 0xA0 //Write
-#define FLUSH_TX 0xE1
-#define FLUSH_RX 0xE2
+#define R_RX_PAYLOAD 0x61 - 0x20 //Read
+#define W_TX_PAYLOAD 0xA0 - 0x20 //Write
+#define FLUSH_TX 0xE1 - 0x20
+#define FLUSH_RX 0xE2 - 0x20
 #define ACTIVATE 0x50
 #define TX_ADDR 0x10
 #define NOP 0xff
@@ -23,7 +24,7 @@
 	#define PWR_UP 1		//0: pwr_dwn, 1: pwr_up
 	#define PRIM_RX 0		//0: PTX, 1: PRX
 
-#define EN_AA 0x01
+#define EN_AA 0x01 //Auto acknowledgement
 	#define ENAA_P5 5
 	#define ENAA_P4 4
 	#define ENAA_P3 3
@@ -39,10 +40,10 @@
 	#define ERX_P1 1
 	#define ERX_P0 0
 
-#define SETUP_AW 0x03
-	#define _3_BYTES 0x1
-	#define _4_BYTES 0x2
-	#define _5_BYTES 0x3
+#define SETUP_AW 0x03 //Number of bytes in address
+	#define _3_BYTES 0x01
+	#define _4_BYTES 0x02
+	#define _5_BYTES 0x03
 
 #define SETUP_RETR 0x04
 	#define RETRANSMIT_3_250_US 0x03
@@ -50,17 +51,15 @@
 #define RX_PW_P0 0x11
 #define RX_ADDR_P0 0x0A
 
-#define SS 2 //Also known as CSN
-#define CE 0
-#define RST 1 //Unused
+#define SS 2 //Also known as CSN, active low
+#define CE 0 //Active high
 
 //USES STATIC PAYLOAD LENGTH
 class NRF24L01{
 private:
 	Spi spi;
-	uint8_t config_register;
 
-	void readNrf(uint8_t reg, uint8_t* val, uint8_t nBytes);
+	void readNrf(uint8_t reg, uint8_t* val, uint8_t nBytes = 1);
 	void writeNrf(uint8_t reg, uint8_t* val, uint8_t nBytes = 1);
 	void setRxMode();
 	void setTxMode();
