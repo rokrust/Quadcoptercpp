@@ -1,3 +1,5 @@
+#pragma once
+
 #include "spi.h"
 #include <stdint.h>
 #include <avr/interrupt.h>
@@ -7,7 +9,7 @@
 #define ADDRESS_WIDTH 5 //Number of bytes in address
 #define P0_LSB_ADDRESS 0x12
 
-#define R_RX_PAYLOAD 0x61 - 0x20 //Read
+#define R_RX_PAYLOAD 0x61 //Read
 #define W_TX_PAYLOAD 0xA0 - 0x20 //Write
 #define FLUSH_TX 0xE1 - 0x20
 #define FLUSH_RX 0xE2 - 0x20

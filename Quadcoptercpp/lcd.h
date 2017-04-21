@@ -1,3 +1,5 @@
+#pragma once
+
 #include "spi.h"
 
 #include <stdint.h>
@@ -83,12 +85,12 @@ private:
 	Spi spi;
 	uint16_t currentColor;
 	void set_address_pointer(int xStart, int xEnd, int yStart, int yEnd);
+	void transmitCommand(char cData);
+	void transmitData(char cData);
 
 public:
 	Lcd();
 	void writeString(int posX, int posY, char const * str);
 	void writeChar(int posX, int posY, char c);
-	void transmitCommand(char cData);
-	void transmitData(char cData);
 	void clearScreen();
 };

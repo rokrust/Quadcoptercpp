@@ -10,12 +10,6 @@
 //RX: PWR_UP 1, PRIM_RX 1, CE high
 //TX: PWR_UP 1, PRIM_RX 0, payload i TX FIFO, CE high
 
-
-//BUGS
-//RX fifo empty
-//config reg: only en_crc high (forced high if en_aa high)
-
-
 NRF24L01::NRF24L01(){
 	_delay_ms(100);
 
@@ -23,20 +17,17 @@ NRF24L01::NRF24L01(){
 	uint8_t data[10];
 
 	DDRB |= (1 << CE);
-	PORTB |= (1 << SS);
-	PORTB &= ~(1 << CE);
+	PORTB |= (1 << SS); //Deactivate SPI bus
+	PORTB &= ~(1 << CE); //Set in standby/pwr_dwn mode
 	
 	//Enable auto ACK
-	printf("ENAA\n");
 	data[0] = (1 << ENAA_P0);
 	writeNrf(EN_AA, data);
 
-	printf("ERX_P0\n");
 	//Enable datapipe 0
 	data[0] = (1 << ERX_P0);
 	writeNrf(EN_RXADDR, data);
 
-	printf("SETUP\n");
 	//Set pipe address width
 	data[0] = _5_BYTES;
 	writeNrf(SETUP_AW, data);
@@ -45,22 +36,17 @@ NRF24L01::NRF24L01(){
 	for(int i = 0; i < ADDRESS_WIDTH; i++){
 		data[i] = P0_LSB_ADDRESS;
 	}
-	printf("RXDDR\n");
 	writeNrf(RX_ADDR_P0, data, ADDRESS_WIDTH);
-	printf("TXDDR\n");
 	writeNrf(TX_ADDR, data, ADDRESS_WIDTH);
 	
-	printf("PAY_WIDTH\n");
 	//Set Payload width
 	data[0] = PAYLOAD_WIDTH;//PAYLOAD_WIDTH;
 	writeNrf(RX_PW_P0, data);
 
-	printf("RETRAN\n");
 	//Set number of retransmits and interval between them
 	data[0] = RETRANSMIT_3_250_US;
 	writeNrf(SETUP_RETR, data);
 	
-	printf("CONFIG\n");
 	//Power up radio controller, enable CRC and empty FIFO'S
 	data[0] = (1 << PWR_UP) | (1 << EN_CRC) | (1 << PRIM_RX);
 	writeNrf(CONFIG, data);
@@ -70,8 +56,6 @@ NRF24L01::NRF24L01(){
 }
 
 void NRF24L01::writeNrf(uint8_t command, uint8_t* val, uint8_t nBytes){
-	uint8_t reval[nBytes];
-
 	PORTB &= ~(1 << SS);
 	_delay_us(10);
 	
@@ -84,12 +68,6 @@ void NRF24L01::writeNrf(uint8_t command, uint8_t* val, uint8_t nBytes){
 	}
 	
 	PORTB |= (1 << SS);
-	readNrf(command, reval, nBytes);
-	for(int i = 0; i < nBytes; i++){
-		printf("%d, ", reval[i]);
-	}
-	printf("\n");
-
 }
 
 void NRF24L01::readNrf(uint8_t command, uint8_t* val, uint8_t nBytes){
@@ -98,7 +76,7 @@ void NRF24L01::readNrf(uint8_t command, uint8_t* val, uint8_t nBytes){
 	
 	spi.transmit(command);
 	_delay_us(10);
-	
+
 	for(int i = 0; i < nBytes; i++){
 		val[i] = spi.transmit(NOP);
 		_delay_us(10);
@@ -139,12 +117,10 @@ void NRF24L01::transmit(uint8_t* data){
 
 void NRF24L01::listen(){
 	setRxMode();
-
 	PORTB |= (1 << CE);
 }
 
 void NRF24L01::recieve(uint8_t* val){
 	PORTB &= ~(1 << CE);
-	writeNrf(R_RX_PAYLOAD, val, PAYLOAD_WIDTH);
-
+	readNrf(R_RX_PAYLOAD, val, PAYLOAD_WIDTH);
 }

@@ -27,13 +27,12 @@ Motor::Motor(int motorNumber){
 
 //Max value is 255
 void Motor::setSpeed(uint8_t speed){
-	//printf("Speed: %d\n", speed);
-
+	
 	//Split speed into $RESOLUTION amount of values between $ESC_MIN and $ESC_MAX 
 	uint8_t divisionFactor = (MOTOR_MAX_SPEED + 1)/ESC_PWM_RESOLUTION;
 
-	uint8_t pwmValue = (speed+1)/divisionFactor + ESC_PWM_MIN; //scale and move min value
-	//printf(" %d, ", pwmValue);
+	//scale and move min value
+	uint8_t pwmValue = (speed+1)/divisionFactor + ESC_PWM_MIN; 
 
 	pwm.setCompare(pwmValue);
 }

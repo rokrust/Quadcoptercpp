@@ -26,10 +26,10 @@
 #define N_ROT_VAR 3
 #define N_MESSURE_VAR 7 //Acceleration, angular velocity and temperature
 #define g_SENSOR_VALUE 16384
-#define MAX_SENSOR_VALUE 32767
-#define MAX_ANGLE_RANGE 1000
+#define MPU6050_MAX_SENSOR_VALUE 32767
+#define MPU6050_MAX_DEG_S_VALUE 1000
 
-#define SAMPLING_TIME 100 //Avoid float arithmetic
+#define SAMPLING_FREQ 10000
 
 class MPU6050{
 private:
@@ -43,6 +43,10 @@ private:
 	void calibrateData(int16_t* sensorData);
 	void updateDataArrays(int16_t* sensorData);
 	void determineOffsetArray();
+
+	void updateAccelerationData(int16_t* sensorData);
+	void updateVelocityData(int16_t* sensorData);
+	void updatePositionData();
 
 public:
 	MPU6050();
@@ -59,7 +63,8 @@ public:
 	int16_t getYRotation(){return positionData[4];}
 	int16_t getZRotation(){return positionData[5];}
 
-	int16_t getXRotationDegrees(){return ((int32_t)positionData[3]*MAX_ANGLE_RANGE)/MAX_SENSOR_VALUE;}
-	int16_t getYRotationDegrees(){return ((int32_t)positionData[4]*MAX_ANGLE_RANGE)/MAX_SENSOR_VALUE;}
-	int16_t getZRotationDegrees(){return ((int32_t)positionData[5]*MAX_ANGLE_RANGE)/MAX_SENSOR_VALUE;}
+	//Convert from sensor values to degrees per second
+	int16_t getXRotationDeg(){return (int16_t)(((int32_t)positionData[3]*MPU6050_MAX_DEG_S_VALUE)/MPU6050_MAX_SENSOR_VALUE);}
+	int16_t getYRotationDeg(){return (int16_t)(((int32_t)positionData[4]*MPU6050_MAX_DEG_S_VALUE)/MPU6050_MAX_SENSOR_VALUE);}
+	int16_t getZRotationDeg(){return (int16_t)(((int32_t)positionData[5]*MPU6050_MAX_DEG_S_VALUE)/MPU6050_MAX_SENSOR_VALUE);}
 };

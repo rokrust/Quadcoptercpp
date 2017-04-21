@@ -20,6 +20,7 @@
 #include "motor_control.h"
 #include "joystick.h"
 #include "NRF24L01.h"
+#include "quadcopter.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -29,39 +30,33 @@
 #include <math.h>
 #include <stdlib.h>
 
+Quadcopter quadcopter;
+
 int main(void)
 {
 	//Constructors
 	fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
 	USART_init(MYUBRR);
-	NRF24L01 nrf;
+	
+	while (1){
 
-	uint8_t val[PAYLOAD_WIDTH];
-	while (1)
-	{
-		//Recieve
-		/*
-		nrf.listen();
-		_delay_ms(100);
-		nrf.recieve(val);
-		printf("Val 1: %d, Val 2: %d\n", val[0], val[1]);
-		_delay_ms(100);
-		*/
-		
-		//Transmit
-		
-		val[0] = 127;
-		val[1] = 10;
-		nrf.transmit(val);
-		_delay_ms(50);
-		
 	}
 
 }
 
+//Recieve message when the radio controller
+//toggles the interrupt pin (msg recieved)
+ISR(INT0_vect){
+	quadcopter.recieveRemotePayload();
+}
+
+
+//Update sensor values
+ISR(TIMER1_COMPA_vect){
+	quadcopter.updateControllerInputs();
+}
 
 //OLD MAIN
-
 /*
 int main(void)
 {
@@ -81,9 +76,17 @@ int main(void)
 	//lcd.writeString(16, 0, "AccZ: ");
 	
 	
-
+	uint8_t val[PAYLOAD_WIDTH];
 	while (1)
 	{
+
+	//Recieve
+	nrf.listen();
+	_delay_ms(100);
+	nrf.recieve(val);
+	printf("Val 1: %d, Val 2: %d\n", val[0], val[1]);
+	_delay_ms(10);
+	
 	//joystick_data[0] = adc.read(0);
 	//joystick_data[1] = adc.read(1);
 	//printf("x: %d, y: %d\n", joystick_data[0], joystick_data[1]);

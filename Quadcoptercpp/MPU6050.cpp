@@ -2,9 +2,9 @@
 #include "MPU6050.h"
 
 #include <stdio.h>
-#include <util/delay.h>
 
 void MPU6050::determineOffsetArray(){
+	//All sensor variables are two bytes long
 	unsigned char readArray[2*N_MESSURE_VAR];
 
 	twi.read_data_from_address(MPU_ADDRESS, ACC_X, readArray, 2*N_MESSURE_VAR);
@@ -17,17 +17,34 @@ void MPU6050::determineOffsetArray(){
 	sensorOffset[2] += g_SENSOR_VALUE;
 }
 
-void MPU6050::updateDataArrays(int16_t* sensorData){
+void MPU6050::updateAccelerationData(int16_t* sensorData){
 	for(int i = 0; i < N_TRANS_VAR; i++){
 		accelerationData[i] = sensorData[i];
-		velocityData[i] += sensorData[i]/SAMPLING_TIME;
-		positionData[i] += velocityData[i]/SAMPLING_TIME;
-
-		//Skip temperature data
-		velocityData[i + N_TRANS_VAR] = sensorData[i + N_TRANS_VAR + 1];
-		positionData[i + N_TRANS_VAR] += velocityData[i + N_TRANS_VAR]/SAMPLING_TIME;
 	}
 }
+
+void MPU6050::updateVelocityData(int16_t* sensorData){
+	for(int i = 0; i < N_TRANS_VAR; i++){
+		velocityData[i] += accelerationData[i]/SAMPLING_FREQ;
+	}
+
+	for(int i = N_TRANS_VAR + 1; i < N_MESSURE_VAR; i++){
+		velocityData[i - 1] = sensorData[i];
+	}
+}
+
+void MPU6050::updatePositionData(){
+	for(int i = 0; i < N_TRANS_VAR + N_ROT_VAR; i++){
+		positionData[i] += velocityData[i]/SAMPLING_FREQ;
+	}
+}
+
+void MPU6050::updateDataArrays(int16_t* sensorData){
+	updateAccelerationData(sensorData);
+	updateVelocityData(sensorData);
+	updatePositionData();
+}
+
 
 
 //Must be called after TWI_Master_intialize() and sei()
@@ -58,7 +75,7 @@ MPU6050::MPU6050(){
 
 
 void MPU6050::updateSensorValues(){
-	//Every variable represented by two values (2 bytes), +1 for the MPU address
+	//Every sensor variable two bytes long
 	unsigned char movement_registers[2*N_MESSURE_VAR];
 	
 	twi.read_data_from_address(MPU_ADDRESS, ACC_X, movement_registers, N_MESSURE_VAR*2);
@@ -80,4 +97,3 @@ void MPU6050::calibrateData(int16_t* sensorData){
 		sensorData[i] -= sensorOffset[i];
 	}
 }
-

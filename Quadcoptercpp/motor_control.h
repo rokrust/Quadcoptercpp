@@ -14,17 +14,25 @@ private:
 	MPU6050 mpu;
 	//GPS gps;
 	
+	//Controller references
 	int8_t xAngleRef, yAngleRef, zAngleRef;
 	int16_t zTranslationRef;
-	uint16_t Kp_xr, Kp_yr, Kp_zr, Kp_zt;
 
-	uint8_t max(uint8_t a, uint8_t b); //To avoid negative values
-	uint8_t saturate(uint16_t value, uint8_t limit); //To avoid too large values
+	//Controller constants
+	uint16_t Kp_xr, Kp_yr, Kp_zr, Kp_zt;
+	
+	//Motor inputs
+	int16_t u_xr, u_yr, u_zr, u_zt;
+
+	int16_t saturateMin(int16_t value, int16_t limit);
+	int16_t saturateMax(int16_t value, int16_t limit);
+	
 
 public:
 	MotorControl();
 
-	void determineMotorInputs();
+	void determineMotorInputs(uint8_t zTransVal);
+	void setMotorInputs();
 
 	void calibrateEscs();
 	void startUpSequence();
@@ -32,6 +40,4 @@ public:
 	int8_t getXAngleRef(){ return xAngleRef; }
 	int8_t getYAngleRef(){ return yAngleRef; }
 	int8_t getZAngleRef(){ return zAngleRef; }
-	
-	void setMotorInputs(uint8_t z_trans, uint8_t  x_rot, uint8_t y_rot, uint8_t z_rot);
 };

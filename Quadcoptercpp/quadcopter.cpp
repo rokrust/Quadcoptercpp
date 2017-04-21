@@ -1,15 +1,16 @@
-﻿#include "gps.h"
-#include "lcd.h"
-#include "radiocontroller.h"
-#include "motor_control.h"
+﻿#include "quadcopter.h"
 
-class Quadcopter{
-private:
-	MotorControl controller;
-	GPS gps;
-	Lcd lcd;
-	RadioController radio;
+Quadcopter::Quadcopter(){
+	samplingTimer = Timer16(F_CPU/SAMPLING_FREQ);
+}
 
-public:
-	Quadcopter();
-};
+void Quadcopter::updateControllerInputs(){
+	uint8_t joystickZ = radioMsg[0];
+
+	controller.determineMotorInputs(joystickZ);
+	controller.setMotorInputs();
+}
+
+void Quadcopter::recieveRemotePayload(){
+	transciever.recieve(radioMsg);
+}

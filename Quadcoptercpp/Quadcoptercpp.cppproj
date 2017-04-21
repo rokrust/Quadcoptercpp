@@ -219,6 +219,9 @@
     <Compile Include="quadcopter.cpp">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="quadcopter.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="radiocontroller.cpp">
       <SubType>compile</SubType>
     </Compile>
