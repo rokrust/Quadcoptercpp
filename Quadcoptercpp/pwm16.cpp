@@ -21,12 +21,6 @@ Pwm16::Pwm16(uint16_t topVal, uint16_t outputCmp): topVal(topVal), outputCmp(out
 	ICR1 = topVal;
 	OCR1A = outputCmp; //Compare match value
 	TCNT1 = 0; //Counter register
-
-	
-	//Enable overflow and output compare interrupts
-	//TIMSK1 |= (1 << OCIE0A) | (1 << TOIE1);
-	
-	//sei();
 }
 
 Pwm16::Pwm16(): Pwm16(0xffff, 0xffff){

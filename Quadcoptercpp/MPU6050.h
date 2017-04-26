@@ -24,19 +24,20 @@
 
 #define N_TRANS_VAR 3
 #define N_ROT_VAR 3
+#define N_MOTION_VAR N_TRANS_VAR + N_ROT_VAR
 #define N_MESSURE_VAR 7 //Acceleration, angular velocity and temperature
 #define g_SENSOR_VALUE 16384
 #define MPU6050_MAX_SENSOR_VALUE 32767
 #define MPU6050_MAX_DEG_S_VALUE 1000
 
-#define SAMPLING_FREQ 10000
+#define SAMPLING_FREQ 100
 
 class MPU6050{
 private:
 	TWI twi;
 	int16_t accelerationData[N_TRANS_VAR];
-	int16_t velocityData[N_TRANS_VAR + N_ROT_VAR];
-	int16_t positionData[N_TRANS_VAR + N_ROT_VAR];
+	int16_t velocityData[N_MOTION_VAR];
+	int16_t positionData[N_MOTION_VAR];
 
 	int16_t sensorOffset[N_MESSURE_VAR];
 	

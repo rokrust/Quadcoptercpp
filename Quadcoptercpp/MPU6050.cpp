@@ -34,7 +34,8 @@ void MPU6050::updateVelocityData(int16_t* sensorData){
 }
 
 void MPU6050::updatePositionData(){
-	for(int i = 0; i < N_TRANS_VAR + N_ROT_VAR; i++){
+	for(int i = 0; i < N_MOTION_VAR; i++){
+		//This will probably lead to most values being zero
 		positionData[i] += velocityData[i]/SAMPLING_FREQ;
 	}
 }
@@ -58,7 +59,7 @@ MPU6050::MPU6050(){
 		velocityData[i] = 0;
 		positionData[i] = 0;
 	}
-
+	
 	//exit standby mode
 	twi.write_data_to_register(MPU_ADDRESS, PWR_MGMT_1, WAKE_UP);
 	

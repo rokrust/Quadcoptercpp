@@ -20,6 +20,9 @@ NRF24L01::NRF24L01(){
 	PORTB |= (1 << SS); //Deactivate SPI bus
 	PORTB &= ~(1 << CE); //Set in standby/pwr_dwn mode
 	
+	//Enable external interrupt pin INT0
+	EIMSK |= (1 << INT0);
+		
 	//Enable auto ACK
 	data[0] = (1 << ENAA_P0);
 	writeNrf(EN_AA, data);
@@ -47,14 +50,18 @@ NRF24L01::NRF24L01(){
 	data[0] = RETRANSMIT_3_250_US;
 	writeNrf(SETUP_RETR, data);
 	
-	//Power up radio controller, enable CRC and empty FIFO'S
-	data[0] = (1 << PWR_UP) | (1 << EN_CRC) | (1 << PRIM_RX);
+	//Power up radio controller, enable CRC and disable TX and MAX_RT interrupts
+	//(leave RX interrupt active)
+	data[0] = (1 << PWR_UP) | (1 << EN_CRC) | (1 << PRIM_RX) | 
+			  (1 << MASK_TX_DS) | (1 << MASK_MAX_RT);
 	writeNrf(CONFIG, data);
 
 	//Give NRF time to reach standby mode (1.5 ms)
 	_delay_ms(10);
 }
 
+//The write flag is added to the command address during write operations
+//unlike the read operations.
 void NRF24L01::writeNrf(uint8_t command, uint8_t* val, uint8_t nBytes){
 	PORTB &= ~(1 << SS);
 	_delay_us(10);

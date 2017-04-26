@@ -1,15 +1,15 @@
-#ifndef __TIMER16_H__
-#define __TIMER16_H__
+#pragma once
+
 #include <stdint.h>
 
 class Timer16{
 private:
-	uint16_t outputCmp;
+	uint8_t prescalerIndex;
+
 public:
 	Timer16();
-	Timer16(uint16_t outputCmp);
+	Timer16(uint16_t timerFreq);
 	void enable();
 	void disable();
+	void setFrequency(uint16_t timerFreq);
 };
-
-#endif

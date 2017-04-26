@@ -16,7 +16,6 @@ Timer::Timer(){
 	OCR0A = 0xff; //compare value: timer frequency
 	TCNT0 = 0; //Initialize counter to zero
 	
-	sei(); //Set global interrupt routines
 }
 
 Timer::Timer(uint8_t outputCmp){
@@ -31,7 +30,6 @@ Timer::Timer(uint8_t outputCmp){
 	OCR0A = outputCmp; //compare value: timer frequency
 	TCNT0 = 0; //Initialize counter to zero
 	
-	sei(); //Set global interrupt routines
 }
 
 void Timer::enable(){

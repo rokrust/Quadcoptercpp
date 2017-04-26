@@ -82,8 +82,7 @@ void TWI::start_transceiver_with_data( unsigned char *msg, unsigned char msgSize
 {
 	unsigned char temp;
 
-	while ( transceiver_busy() );             // Wait until TWI is ready for next transmission.
-
+	while ( transceiver_busy() );	              // Wait until TWI is ready for next transmission.
 	TWI_msgSize = msgSize;                        // Number of data to transmit.
 	TWI_buf[0]  = msg[0];                         // Store slave address with R/W setting.
 	if (!( msg[0] & (TRUE<<TWI_READ_BIT) ))       // If it is a write operation, then also copy data.
@@ -144,10 +143,11 @@ void TWI::read_data_from_address(unsigned char chip_address, unsigned char regis
 	//Put address in the first position and read register
 	//in the second.
 	unsigned char temp[msgSize+1];
+	
 	temp[0] = chip_address << 1 | WRITE_FLAG;
 	temp[1] = register_address;
 	start_transceiver_with_data(temp, 2);
-
+	
 	temp[0] = chip_address << 1 | READ_FLAG;
 
 	start_transceiver_with_data(temp, msgSize + 1);

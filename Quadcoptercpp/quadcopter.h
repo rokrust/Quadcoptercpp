@@ -9,9 +9,9 @@
 class Quadcopter{
 private:
 	MotorControl controller;
-	GPS gps;
-	Lcd lcd;
-	NRF24L01 transciever;
+	//GPS gps;
+	//Lcd lcd;
+	//NRF24L01 transciever;
 	Timer16 samplingTimer;
 
 	uint8_t radioMsg[PAYLOAD_WIDTH];
@@ -21,4 +21,6 @@ public:
 
 	void updateControllerInputs();
 	void recieveRemotePayload();
+
+	void test(){printf("Quad test\n"); controller.test();}
 };

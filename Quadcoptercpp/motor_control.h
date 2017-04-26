@@ -12,7 +12,6 @@ class MotorControl{
 private:
 	Motor motors[N_MOTORS];	
 	MPU6050 mpu;
-	//GPS gps;
 	
 	//Controller references
 	int8_t xAngleRef, yAngleRef, zAngleRef;
@@ -40,4 +39,6 @@ public:
 	int8_t getXAngleRef(){ return xAngleRef; }
 	int8_t getYAngleRef(){ return yAngleRef; }
 	int8_t getZAngleRef(){ return zAngleRef; }
+
+	void test(){mpu.updateSensorValues(); printf("x: %d, y: %d, z: %d\n", mpu.getXRotationDeg(), mpu.getYRotationDeg(), mpu.getZRotationDeg()); }
 };
