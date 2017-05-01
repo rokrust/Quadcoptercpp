@@ -25,7 +25,6 @@ private:
 
 	int16_t saturateMin(int16_t value, int16_t limit);
 	int16_t saturateMax(int16_t value, int16_t limit);
-	
 
 public:
 	MotorControl();
@@ -40,5 +39,8 @@ public:
 	int8_t getYAngleRef(){ return yAngleRef; }
 	int8_t getZAngleRef(){ return zAngleRef; }
 
-	void test(){mpu.updateSensorValues(); printf("x: %d, y: %d, z: %d\n", mpu.getXRotationDeg(), mpu.getYRotationDeg(), mpu.getZRotationDeg()); }
+	void test(){ 
+		mpu.updateSensorValues();
+		printf("x: %d, y: %d, z: %d\n", mpu.getXRotationDeg(), mpu.getYRotationDeg(), mpu.getZRotationDeg());
+	}
 };

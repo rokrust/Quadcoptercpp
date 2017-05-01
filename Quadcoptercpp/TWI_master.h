@@ -1,6 +1,6 @@
 #ifndef TWI_MASTER_H_
 #define TWI_MASTER_H_
-
+#include "timer16.h"
 
 /*****************************************************************************
 *
@@ -31,7 +31,7 @@
 
 #define WRITE_FLAG 0
 #define READ_FLAG 1
-#define TWI_TWBR            0x0C        // TWI Bit rate Register setting.
+#define TWI_TWBR            0x08        // TWI Bit rate Register setting.
                                         // Se Appliccration note for detailed 
                                         // information on setting this value.
 // Not used defines!

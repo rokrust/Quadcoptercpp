@@ -41,6 +41,7 @@ Remember to enable interrupts from the main application after initializing the T
 ****************************************************************************/
 TWI::TWI(void)
 {
+
 	TWBR = TWI_TWBR;                                  // Set bit rate register (Baudrate). Defined in header file.
 	// TWSR = TWI_TWPS;                                  // Not used. Driver presumes prescaler to be 00.
 	TWDR = 0xFF;                                      // Default content = SDA released.
@@ -80,6 +81,7 @@ then initialize the next operation and return.
 ****************************************************************************/
 void TWI::start_transceiver_with_data( unsigned char *msg, unsigned char msgSize )
 {
+
 	unsigned char temp;
 
 	while ( transceiver_busy() );	              // Wait until TWI is ready for next transmission.
@@ -96,6 +98,7 @@ void TWI::start_transceiver_with_data( unsigned char *msg, unsigned char msgSize
 	(1<<TWIE)|(1<<TWINT)|                  // Enable TWI Interupt and clear the flag.
 	(0<<TWEA)|(1<<TWSTA)|(0<<TWSTO)|       // Initiate a START condition.
 	(0<<TWWC);                             //
+
 }
 
 /****************************************************************************
@@ -142,6 +145,7 @@ unsigned char TWI::get_data_from_transceiver( unsigned char *msg, unsigned char 
 void TWI::read_data_from_address(unsigned char chip_address, unsigned char register_address, unsigned char* msg, unsigned char msgSize){
 	//Put address in the first position and read register
 	//in the second.
+
 	unsigned char temp[msgSize+1];
 	
 	temp[0] = chip_address << 1 | WRITE_FLAG;
@@ -153,6 +157,7 @@ void TWI::read_data_from_address(unsigned char chip_address, unsigned char regis
 	start_transceiver_with_data(temp, msgSize + 1);
 	get_data_from_transceiver(temp, msgSize + 1);
 	
+
 	for(int i = 0; i < msgSize; i++){
 		msg[i] = temp[i+1];
 	}
@@ -173,6 +178,7 @@ application.
 ****************************************************************************/
 ISR(TWI_vect)
 {
+	cli();
 	static unsigned char TWI_bufPtr;
 	switch (TWSR)
 	{

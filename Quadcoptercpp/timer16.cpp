@@ -11,7 +11,7 @@ uint16_t prescalerValues[6] = {0, 1, 8, 64, 256, 1024};
 
 Timer16::Timer16(){
 	//Set CTC mode
-	TCCR1A &= (1 << WGM11) | (1 << WGM10);
+	TCCR1A &= ~((1 << WGM11) | (1 << WGM10));
 	TCCR1B |= (1 << WGM12);
 	TCCR1B &= ~(1 << WGM13);
 	
@@ -26,7 +26,6 @@ Timer16::Timer16(){
 	
 	//No prescaler by default
 	prescalerIndex = 1;
-	printf("Timer16 initialized!\n");
 }
 
 
@@ -36,6 +35,8 @@ Timer16::Timer16(uint16_t timerFreq) : Timer16(){
 
 void Timer16::enable(){
 	TCCR1B |= prescalerIndex;
+
+	TCNT1 = 0;
 }
 
 void Timer16::disable(){
@@ -46,13 +47,26 @@ void Timer16::setFrequency(uint16_t timerFreq){
 
 	//Value is possibly too large for the timer's counter register
 	uint32_t outputCmp = F_CPU/timerFreq;
-
+	
 	//Increase prescaler until overflow is gone or max prescaler is reached
-	while(outputCmp > 0xffff && prescalerIndex < 5){
+	while(outputCmp / prescalerValues[prescalerIndex] > 0xffff && prescalerIndex < 6){
 		prescalerIndex++;
-		outputCmp /= prescalerValues[prescalerIndex];
 	}
-
+	
+	outputCmp /= prescalerValues[prescalerIndex];
 	OCR1A = outputCmp;
 	TCNT1 = 0;
+}
+
+void Timer16::setToTickMode(){
+	TCCR1A &= ~((1 << WGM11) | (1 << WGM10));
+	TCCR1B &= ~((1 << WGM13) | (1 << WGM12));
+
+	TIMSK1 &= ~((1 << OCIE0A) | (1 << TOIE1));
+}
+
+uint32_t Timer16::currentTime(){
+	uint16_t currentCount = TCNT1;
+
+	return (F_CPU / prescalerValues[prescalerIndex]) / currentCount;
 }

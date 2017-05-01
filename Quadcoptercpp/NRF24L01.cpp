@@ -112,6 +112,14 @@ void NRF24L01::setTxMode(){
 	_delay_us(10);
 }
 
+//Must be called to after recieve/transmit to continue communication
+void NRF24L01::reset(){
+	//Clear status flags
+	uint8_t data = (1 << RX_DR) | (1 << TX_DS) | (1 << MAX_RT);
+	writeNrf(STATUS, &data);
+}
+
+
 void NRF24L01::transmit(uint8_t* data){
 	writeNrf(FLUSH_TX, NULL, 0);
 	writeNrf(W_TX_PAYLOAD, data, PAYLOAD_WIDTH);
@@ -123,6 +131,8 @@ void NRF24L01::transmit(uint8_t* data){
 }
 
 void NRF24L01::listen(){
+	reset();
+
 	setRxMode();
 	PORTB |= (1 << CE);
 }

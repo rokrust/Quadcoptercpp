@@ -28,9 +28,9 @@
 #define N_MESSURE_VAR 7 //Acceleration, angular velocity and temperature
 #define g_SENSOR_VALUE 16384
 #define MPU6050_MAX_SENSOR_VALUE 32767
-#define MPU6050_MAX_DEG_S_VALUE 1000
+#define MPU6050_MAX_DEG_S_VALUE 250
 
-#define SAMPLING_FREQ 100
+#define SAMPLING_FREQ 48
 
 class MPU6050{
 private:
@@ -48,6 +48,7 @@ private:
 	void updateAccelerationData(int16_t* sensorData);
 	void updateVelocityData(int16_t* sensorData);
 	void updatePositionData();
+
 
 public:
 	MPU6050();

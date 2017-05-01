@@ -5,21 +5,6 @@
  * Author : rokrust
  */ 
 
-#include "adc.h"
-#include "timer.h"
-#include "timer16.h"
-#include "usart.h"
-#include "TWI_master.h"
-#include "MPU6050.h"
-#include "spi.h"
-#include "lcd.h"
-#include "gps.h"
-#include "pwm.h"
-#include "pwm16.h"
-#include "motor.h"
-#include "motor_control.h"
-#include "joystick.h"
-#include "NRF24L01.h"
 #include "quadcopter.h"
 
 #include <avr/io.h>
@@ -34,17 +19,15 @@ Quadcopter quadcopter;
 
 int main(void)
 {
-	fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
-	USART_init(MYUBRR);
+	//fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
+	//USART_init(MYUBRR);
 	//Constructors
 	//Quadcopter quadcopter;
 
 
 	while (1){
 		//This works
-		printf("In main\n");
-		quadcopter.test();
-		_delay_ms(10);
+		//printf("In main\n");
 	}
 
 }
@@ -52,15 +35,15 @@ int main(void)
 //Recieve message when the radio controller
 //toggles the interrupt pin (msg recieved)
 ISR(INT0_vect){
-	//quadcopter.recieveRemotePayload();
+	printf("External interrupt\n");
+	quadcopter.recieveRemotePayload();
+
 }
 
 
 //Update sensor values
 ISR(TIMER1_COMPA_vect){
-	//This does not work
 	quadcopter.test();
-	
 	
 	//quadcopter.updateControllerInputs();
 }

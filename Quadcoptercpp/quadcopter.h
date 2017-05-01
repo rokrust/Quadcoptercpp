@@ -11,7 +11,7 @@ private:
 	MotorControl controller;
 	//GPS gps;
 	//Lcd lcd;
-	//NRF24L01 transciever;
+	NRF24L01 transceiver;
 	Timer16 samplingTimer;
 
 	uint8_t radioMsg[PAYLOAD_WIDTH];
@@ -19,8 +19,10 @@ private:
 public:
 	Quadcopter();
 
-	void updateControllerInputs();
+	void updateSensors();
+
+	void updateController();
 	void recieveRemotePayload();
 
-	void test(){printf("Quad test\n"); controller.test();}
+	void test(){controller.test();}
 };

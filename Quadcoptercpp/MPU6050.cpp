@@ -1,5 +1,6 @@
 ﻿#include "TWI_Master.h"
 #include "MPU6050.h"
+#include <avr/interrupt.h>
 
 #include <stdio.h>
 
@@ -50,8 +51,6 @@ void MPU6050::updateDataArrays(int16_t* sensorData){
 
 //Must be called after TWI_Master_intialize() and sei()
 MPU6050::MPU6050(){
-	printf("Initializing MPU..\n");
-	
 	determineOffsetArray();
 
 	for(int i = 0; i < N_MESSURE_VAR - 1; i++){
@@ -71,7 +70,6 @@ MPU6050::MPU6050(){
 	
 	//Read and store offset values
 	updateSensorValues();
-	printf("MPU initialized!\n");
 }
 
 
@@ -90,7 +88,6 @@ void MPU6050::updateSensorValues(){
 	//Add/subtract offset
 	calibrateData(sensorData);
 	updateDataArrays(sensorData);
-
 }
 
 void MPU6050::calibrateData(int16_t* sensorData){

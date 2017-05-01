@@ -9,7 +9,11 @@ private:
 public:
 	Timer16();
 	Timer16(uint16_t timerFreq);
+	
 	void enable();
 	void disable();
+	
 	void setFrequency(uint16_t timerFreq);
+	void setToTickMode();
+	uint32_t currentTime();
 };

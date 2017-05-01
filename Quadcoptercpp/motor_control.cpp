@@ -3,16 +3,15 @@
 #include <util/delay.h>
 
 MotorControl::MotorControl(): xAngleRef(0), yAngleRef(0), zAngleRef(0), zTranslationRef(10000){
-	printf("Initializing motors..\n");
 	for(int i = 0; i < N_MOTORS; i++){
 		motors[i] = Motor(i);
 	}
-	printf("Motors initialized!\n");
 
-	Kp_xr = 4; 
-	Kp_yr = 4; 
-	Kp_zr = 4; 
+	Kp_xr = 4;
+	Kp_yr = 4;
+	Kp_zr = 4;
 	Kp_zt = 1;
+
 }
 
 

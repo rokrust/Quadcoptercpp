@@ -50,6 +50,13 @@
 #define SETUP_RETR 0x04
 	#define RETRANSMIT_3_250_US 0x03
 
+#define STATUS 0x07
+	#define RX_DR 6
+	#define TX_DS 5
+	#define MAX_RT 4
+	#define TX_FULL 0
+
+
 #define RX_PW_P0 0x11
 #define RX_ADDR_P0 0x0A
 
@@ -65,6 +72,7 @@ private:
 	void writeNrf(uint8_t reg, uint8_t* val, uint8_t nBytes = 1);
 	void setRxMode();
 	void setTxMode();
+	void reset();
 
 public:
 	NRF24L01();
