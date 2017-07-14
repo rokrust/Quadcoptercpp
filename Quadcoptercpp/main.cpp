@@ -19,15 +19,9 @@ Quadcopter quadcopter;
 
 int main(void)
 {
-	//fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
-	//USART_init(MYUBRR);
-	//Constructors
-	//Quadcopter quadcopter;
-
 
 	while (1){
-		//This works
-		//printf("In main\n");
+		quadcopter.readIMU();
 	}
 
 }
@@ -35,7 +29,6 @@ int main(void)
 //Recieve message when the radio controller
 //toggles the interrupt pin (msg recieved)
 ISR(INT0_vect){
-	printf("External interrupt\n");
 	quadcopter.recieveRemotePayload();
 
 }
@@ -43,9 +36,8 @@ ISR(INT0_vect){
 
 //Update sensor values
 ISR(TIMER1_COMPA_vect){
-	quadcopter.test();
-	
-	//quadcopter.updateControllerInputs();
+	quadcopter.updateMotionData();
+	quadcopter.updateController();
 }
 
 //OLD MAIN

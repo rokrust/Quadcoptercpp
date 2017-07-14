@@ -1,6 +1,8 @@
 #pragma once
 
 #include "TWI_master.h"
+#include "config.h"
+
 #include <stdint.h>
 
 
@@ -30,7 +32,6 @@
 #define MPU6050_MAX_SENSOR_VALUE 32767
 #define MPU6050_MAX_DEG_S_VALUE 250
 
-#define SAMPLING_FREQ 48
 
 class MPU6050{
 private:
@@ -40,24 +41,22 @@ private:
 	int16_t positionData[N_MOTION_VAR];
 
 	int16_t sensorOffset[N_MESSURE_VAR];
+
+	int16_t sensorData[N_MESSURE_VAR];
 	
-	void calibrateData(int16_t* sensorData);
-	void updateDataArrays(int16_t* sensorData);
+	void calibrateSensorData();
 	void determineOffsetArray();
 
-	void updateAccelerationData(int16_t* sensorData);
-	void updateVelocityData(int16_t* sensorData);
+	void updateAccelerationData();
+	void updateVelocityData();
 	void updatePositionData();
 
 
 public:
 	MPU6050();
-	void updateSensorValues();
-	
-	int16_t* getAccelerationData(){return accelerationData;}
-	int16_t* getVelocityData(){return velocityData;}
-	int16_t* getPositionData(){return positionData;}
-	
+	void readMotionData();
+	void updateDataArrays();
+
 	int16_t getXTranslation(){return positionData[0];}
 	int16_t getYTranslation(){return positionData[1];}
 	int16_t getZTranslation(){return positionData[2];}

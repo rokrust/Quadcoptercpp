@@ -17,9 +17,6 @@ Timer16::Timer16(){
 	
 	//Disable output compare pins
 	TCCR1A &= ~((1 << COM1A1) | (1 << COM1A0) | (COM1B1) | (COM1B0));
-
-	//Enable overflow and output compare interrupts
-	TIMSK1 |= (1 << OCIE0A) | (1 << TOIE1);
 	
 	OCR1A = 0xffff;
 	TCNT1 = 0;
@@ -30,7 +27,7 @@ Timer16::Timer16(){
 
 
 Timer16::Timer16(uint16_t timerFreq) : Timer16(){
-	setFrequency(timerFreq);
+	setToInterruptMode(timerFreq);
 }
 
 void Timer16::enable(){
@@ -55,7 +52,13 @@ void Timer16::setFrequency(uint16_t timerFreq){
 	
 	outputCmp /= prescalerValues[prescalerIndex];
 	OCR1A = outputCmp;
-	TCNT1 = 0;
+}
+
+void Timer16::setToInterruptMode(uint16_t timerFreq){
+	//Enable overflow and output compare interrupts
+	TIMSK1 |= (1 << OCIE0A) | (1 << TOIE1);
+
+	setFrequency(timerFreq);
 }
 
 void Timer16::setToTickMode(){
@@ -63,6 +66,8 @@ void Timer16::setToTickMode(){
 	TCCR1B &= ~((1 << WGM13) | (1 << WGM12));
 
 	TIMSK1 &= ~((1 << OCIE0A) | (1 << TOIE1));
+
+	prescalerIndex = 1;
 }
 
 uint32_t Timer16::currentTime(){

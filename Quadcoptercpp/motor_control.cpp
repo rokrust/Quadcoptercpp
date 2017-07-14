@@ -12,18 +12,24 @@ MotorControl::MotorControl(): xAngleRef(0), yAngleRef(0), zAngleRef(0), zTransla
 	Kp_zr = 4;
 	Kp_zt = 1;
 
+	Kd_xr = 4;
+	Kd_yr = 4;
+	Kd_zr = 4;
+
+	u_xr = 0;
+	u_yr = 0;
+	u_zr = 0;
+	u_zt = 0;
 }
 
 
-void MotorControl::determineMotorInputs(uint8_t zTransVal){
-
-	mpu.updateSensorValues();
-	
-	u_xr = (xAngleRef - mpu.getXRotationDeg())*Kp_xr;
-	u_yr = (yAngleRef - mpu.getYRotationDeg())*Kp_yr;
-	u_zr = (zAngleRef - mpu.getZRotationDeg())*Kp_zr;
-	u_zt = zTransVal * Kp_xr;
-
+void MotorControl::determineMotorInputs(int16_t xRot, int16_t yRot, int16_t zRot, uint8_t zTrans){
+	u_xr = (xAngleRef - xRot)*Kp_xr;
+	u_yr = (yAngleRef - yRot)*Kp_yr;
+	u_zr = (zAngleRef - zRot)*Kp_zr;
+	u_zt = zTrans * Kp_xr;
+	//printf("x: %d, y: %d, z: %d\n", xRot, yRot, zRot);
+	//printf("x: %d, y: %d, z: %d, r: %d\n", u_xr, u_yr, u_zr, u_zt);
 }
 
 
@@ -34,6 +40,8 @@ void MotorControl::setMotorInputs(){
 	motorInput[1] = u_zt - u_xr - u_yr - u_zr;
 	motorInput[2] = u_zt - u_xr + u_yr + u_zr;
 	motorInput[3] = u_zt + u_xr + u_yr - u_zr;
+
+	//printf("1: %d, 2: %d, 3: %d, 4: %d\n", motorInput[0], motorInput[1], motorInput[2], motorInput[3]);
 
 	for(int i = 0; i < N_MOTORS; i++){
 		motorInput[i] = saturateMin(motorInput[i], 0);

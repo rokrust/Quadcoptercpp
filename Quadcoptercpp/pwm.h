@@ -8,6 +8,11 @@ private:
 	volatile uint8_t* outputCmpRegister;
 	int timerNumber;
 
+	void initializePWM0A();
+	void initializePWM0B();
+	void initializePWM2A();
+	void initializePWM2B();
+
 	void initializeTimer0A();
 	void initializeTimer0B();
 	void initializeTimer2A();

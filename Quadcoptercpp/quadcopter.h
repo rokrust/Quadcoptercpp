@@ -3,26 +3,48 @@
 #include "NRF24L01.h"
 #include "motor_control.h"
 #include "timer16.h"
-
-#define F_CPU 16000000
+#include "config.h"
 
 class Quadcopter{
 private:
-	MotorControl controller;
+	MPU6050 mpu;
 	//GPS gps;
-	//Lcd lcd;
 	NRF24L01 transceiver;
+	MotorControl controller;
 	Timer16 samplingTimer;
 
 	uint8_t radioMsg[PAYLOAD_WIDTH];
 
 public:
 	Quadcopter();
+	
+	//Read values from the IMU
+	void readIMU();
 
-	void updateSensors();
+	//Calculate acceleration/angular acceleration, velocity/angular velocity 
+	//and position/angles from IMU data
+	void updateMotionData();
 
+	//Update motor speeds
 	void updateController();
+
+	//Read data from radio controller
 	void recieveRemotePayload();
 
-	void test(){controller.test();}
+	void test1(){
+		samplingTimer.setToTickMode(); 
+		samplingTimer.enable();
+	}
+	
+	void test2(){
+		uint32_t timeStamp = samplingTimer.currentTime(); 
+		printf("time: %lu\n", timeStamp); 
+		samplingTimer.setToInterruptMode(SAMPLING_FREQ);
+		samplingTimer.enable();
+	}
+
+	void test3(){
+		//printf("x: %d, y: %d\n", radioMsg[0], radioMsg[1]);
+		printf("x: %d, y: %d, z: %d\n", mpu.getXRotationDeg(), mpu.getYRotationDeg(), mpu.getZRotationDeg());
+	}
 };

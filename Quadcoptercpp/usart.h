@@ -1,7 +1,7 @@
 #pragma once
+#include "config.h"
 
 #define BAUD 9600
-#define F_CPU 16000000
 #define MYUBRR F_CPU/16/BAUD-1
 
 //Error flags

@@ -3,8 +3,7 @@
 #include "pwm16.h"
 
 #include <util/delay.h>
-
-#define F_CLOCK 16000000 //Should probably declare this in a designated header file
+#include "config.h"
 
 
 Motor::Motor(){

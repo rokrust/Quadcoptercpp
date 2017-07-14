@@ -8,23 +8,30 @@ Quadcopter::Quadcopter(){
 	controller = MotorControl();
 
 	samplingTimer = Timer16(SAMPLING_FREQ);
-	
-
 	samplingTimer.enable();
+
 	transceiver.listen();
 	
 	//Enable external interrupts
 	sei();
 }
 
+void Quadcopter::readIMU(){
+	mpu.readMotionData();
+}
+
+void Quadcopter::updateMotionData(){
+	mpu.updateDataArrays();
+}
+
 void Quadcopter::updateController(){
 	uint8_t joystickZ = radioMsg[0];
-
-	controller.determineMotorInputs(joystickZ);
+	
+	controller.determineMotorInputs(mpu.getXRotationDeg(), mpu.getYRotationDeg(), mpu.getZRotationDeg(), joystickZ);
 	controller.setMotorInputs();
 }
 
 void Quadcopter::recieveRemotePayload(){
-	transceiver.recieve(radioMsg);
+	transceiver.receive(radioMsg);
 	transceiver.listen();
 }

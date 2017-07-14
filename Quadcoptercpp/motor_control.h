@@ -10,8 +10,7 @@
 
 class MotorControl{
 private:
-	Motor motors[N_MOTORS];	
-	MPU6050 mpu;
+	Motor motors[N_MOTORS];
 	
 	//Controller references
 	int8_t xAngleRef, yAngleRef, zAngleRef;
@@ -19,6 +18,7 @@ private:
 
 	//Controller constants
 	uint16_t Kp_xr, Kp_yr, Kp_zr, Kp_zt;
+	uint16_t Kd_xr, Kd_yr, Kd_zr;
 	
 	//Motor inputs
 	int16_t u_xr, u_yr, u_zr, u_zt;
@@ -29,7 +29,7 @@ private:
 public:
 	MotorControl();
 
-	void determineMotorInputs(uint8_t zTransVal);
+	void determineMotorInputs(int16_t xRot, int16_t yRot, int16_t zRot, uint8_t zTrans);
 	void setMotorInputs();
 
 	void calibrateEscs();
@@ -39,8 +39,4 @@ public:
 	int8_t getYAngleRef(){ return yAngleRef; }
 	int8_t getZAngleRef(){ return zAngleRef; }
 
-	void test(){ 
-		mpu.updateSensorValues();
-		printf("x: %d, y: %d, z: %d\n", mpu.getXRotationDeg(), mpu.getYRotationDeg(), mpu.getZRotationDeg());
-	}
 };

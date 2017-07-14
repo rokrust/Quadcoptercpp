@@ -14,6 +14,8 @@ public:
 	void disable();
 	
 	void setFrequency(uint16_t timerFreq);
+	void setToInterruptMode(uint16_t timerFreq);
+
 	void setToTickMode();
 	uint32_t currentTime();
 };

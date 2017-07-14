@@ -5,7 +5,7 @@
 #include <avr/interrupt.h>
 #include <stdio.h>
 
-void Pwm::initializeTimer0A(){
+void Pwm::initializePWM0A(){
 	DDRD |= (1 << PORTD6);
 
 	//Clear compare match (non-inverted mode)
@@ -17,7 +17,7 @@ void Pwm::initializeTimer0A(){
 	TCCR0B &= ~(1 << WGM02);
 }
 
-void Pwm::initializeTimer0B(){
+void Pwm::initializePWM0B(){
 	DDRD |= (1 << PORTD5);
 
 	//Clear compare match (non-inverted mode)
@@ -29,7 +29,7 @@ void Pwm::initializeTimer0B(){
 	TCCR0B &= ~(1 << WGM02);
 }
 
-void Pwm::initializeTimer2A(){
+void Pwm::initializePWM2A(){
 	DDRB |= (1 << PORTB3);
 
 	//Clear compare match (non-inverted mode)
@@ -41,7 +41,20 @@ void Pwm::initializeTimer2A(){
 	TCCR2B &= ~(1 << WGM22);
 }
 
-void Pwm::initializeTimer2B(){
+void Pwm::initializeTimer2A(){
+	//Change timer to normal mode
+	TCCR2A &= ~( (1 << WGM21) | (1 << WGM20) );
+	TCCR2B &= ~(1 << WGM22);
+
+	//Enable output compare interrupt
+	TIMSK2 |= (1 << OCIE2A) | (1 << TOIE2);
+
+	//Set to output
+	DDRD |= (1 << PORTD4);
+
+}
+
+void Pwm::initializePWM2B(){
 	DDRD |= (1 << PORTD3);
 
 	//Clear compare match (non-inverted mode)
@@ -58,22 +71,29 @@ void Pwm::initializeTimer2B(){
 Pwm::Pwm(int timerNumber): timerNumber(timerNumber){
 	switch(timerNumber){
 		case 0:
-			initializeTimer0A();
+			initializePWM0A();
 			outputCmpRegister = &(OCR0A);
 			break;
 		
 		case 1:
-			initializeTimer0B();
+			initializePWM0B();
 			outputCmpRegister = &(OCR0B);
 			break;
 		
 		case 2:
-			initializeTimer2A();
+			initializePWM2A();
 			outputCmpRegister = &(OCR2A);
+			
+			//If SPI is used, change to interrupt driven timer
+			//and implement PWM in ISR
+			if(PORTB & (1 << PORTB3)){
+				initializeTimer2A();
+			}
+
 			break;
 
 		case 3:
-			initializeTimer2B();
+			initializePWM2B();
 			outputCmpRegister = &(OCR2B);
 			break;
 
@@ -100,6 +120,11 @@ void Pwm::enable(){
 	if(timerNumber == 2 || timerNumber == 3){
 		TCCR2B |= (1 << CS22) | (1 << CS21);
 		TCCR2B &= ~(1 << CS20);
+
+		//In case SPI is used
+		if( timerNumber == 2 && (PORTB & (1 << PORTB3)) ){
+			PORTD |= (1 << PORTD4);
+		}
 	}
 
 }
@@ -111,5 +136,21 @@ void Pwm::disable(){
 
 	if(timerNumber == 2 || timerNumber == 3){
 		TCCR2B &= ~((1 << CS22) | (1 << CS21) | (1 << CS20));
+
+		//In case SPI is used
+		if(timerNumber == 2 && PORTB & (1 << PORTB3)){
+			PORTD &= ~(1 << PORTD4);
+		}
 	}
+
+}
+
+//Emulate PWM
+//Hopefully this won't take up too much of the CPU.
+ISR(TIMER2_COMPA_vect){
+	PORTD &= ~(1 << PORTD4);
+}
+
+ISR(TIMER2_OVF_vect){
+	PORTD |= (1 << PORTD4);
 }

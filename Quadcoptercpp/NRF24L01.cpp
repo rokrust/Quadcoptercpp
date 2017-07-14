@@ -128,8 +128,11 @@ void NRF24L01::transmit(uint8_t* data){
 	PORTB |= (1 << CE);
 	_delay_us(20); //Should probably fix this
 	PORTB &= ~(1 << CE);
+
+	reset();
 }
 
+//Accept incoming messages. Does not block execution.
 void NRF24L01::listen(){
 	reset();
 
@@ -137,7 +140,8 @@ void NRF24L01::listen(){
 	PORTB |= (1 << CE);
 }
 
-void NRF24L01::recieve(uint8_t* val){
+//Collect received message
+void NRF24L01::receive(uint8_t* val){
 	PORTB &= ~(1 << CE);
 	readNrf(R_RX_PAYLOAD, val, PAYLOAD_WIDTH);
 }

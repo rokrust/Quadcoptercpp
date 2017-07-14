@@ -78,7 +78,7 @@ public:
 	NRF24L01();
 
 	void listen(); //can't transmit while listening. Run receive to stop listening
-	void recieve(uint8_t* data);
+	void receive(uint8_t* data);
 	void transmit(uint8_t* data);
 
 };
