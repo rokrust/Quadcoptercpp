@@ -45,6 +45,6 @@ public:
 
 	void test3(){
 		//printf("x: %d, y: %d\n", radioMsg[0], radioMsg[1]);
-		printf("x: %d, y: %d, z: %d\n", mpu.getXRotationDeg(), mpu.getYRotationDeg(), mpu.getZRotationDeg());
+		//printf("x: %d, y: %d, z: %d\n", mpu.getXRotationDeg(), mpu.getYRotationDeg(), mpu.getZRotationDeg());
 	}
 };

@@ -17,18 +17,19 @@ Quadcopter::Quadcopter(){
 }
 
 void Quadcopter::readIMU(){
-	mpu.readMotionData();
+	//mpu.read_motion_data();
 }
 
+//Timing sensitive. Used in integration.
 void Quadcopter::updateMotionData(){
-	mpu.updateDataArrays();
+	//mpu.update_motion_arrays();
 }
 
 void Quadcopter::updateController(){
 	uint8_t joystickZ = radioMsg[0];
 	
-	controller.determineMotorInputs(mpu.getXRotationDeg(), mpu.getYRotationDeg(), mpu.getZRotationDeg(), joystickZ);
-	controller.setMotorInputs();
+	//controller.determineMotorInputs(mpu.getXRotationDeg(), mpu.getYRotationDeg(), mpu.getZRotationDeg(), joystickZ);
+	//controller.setMotorInputs();
 }
 
 void Quadcopter::recieveRemotePayload(){

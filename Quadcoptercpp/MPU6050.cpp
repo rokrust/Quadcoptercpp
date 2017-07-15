@@ -4,59 +4,73 @@
 
 #include <stdio.h>
 
-void MPU6050::determineOffsetArray(){
+//Calculates the offset by averaging a certain number of samples
+//while in the initial state
+void MPU6050::_calculate_offset(){
 	//All sensor variables are two bytes long
-	unsigned char readArray[2*N_MESSURE_VAR];
-
-	twi.read_data_from_address(MPU_ADDRESS, ACC_X, readArray, 2*N_MESSURE_VAR);
+	int32_t cumulative_data[N_MOTION_VAR];
+	int16_t prev_data[N_MOTION_VAR];
 	
-	for(int i = 0; i < 2*N_MESSURE_VAR; i += 2){
-		sensorOffset[i/2] = (readArray[i] << 8) | readArray[i + 1];
+	//Sum # OFFSET_AVG_ITERATIONS samples
+	for(int i = 0; i < MPU6050_OFFSET_AVG_ITERATIONS; i++){
+		read_motion_data(prev_data);
+
+		for(int i = 0; i < N_MEASURE_VAR; i++){
+			cumulative_data[i] += prev_data[i];
+		}
 	}
 
-}
+	//Take the average of all the data
+	for(int i = 0; i < N_MEASURE_VAR; i++){
+		cumulative_data[i] /= MPU6050_OFFSET_AVG_ITERATIONS;
+	}
 
-void MPU6050::updateAccelerationData(){
+	//Split the result into the offset arrays
 	for(int i = 0; i < N_TRANS_VAR; i++){
-		accelerationData[i] = sensorData[i];
+		int j = i + N_TRANS_VAR + 1;
+
+		translational_data.offset[i] = (int16_t)cumulative_data[i];
+		rotational_data.offset[i] = (int16_t)cumulative_data[j];
 	}
 }
 
-void MPU6050::updateVelocityData(){
+void MPU6050::_update_acceleration_data(int16_t *data){
+	for(int i = 0; i < N_TRANS_VAR; i++){
+		translational_data.acceleration[i] = data[i];
+	}
+}
+
+void MPU6050::_update_velocity_data(int16_t *data){
 	//Integrate data from the accelerometers
-	for(int i = 0; i < N_TRANS_VAR; i++){
-		velocityData[i] += accelerationData[i]/SAMPLING_FREQ;
-	}
+	//Save the angular velocity (index j)
+	for(uint8_t i = 0; i < N_TRANS_VAR; i++){
+		uint8_t j = i + N_TRANS_VAR;
 
-	//Read the angular velocities directly
-	for(int i = N_TRANS_VAR + 1; i < N_MESSURE_VAR; i++){
-		velocityData[i - 1] = sensorData[i];
+		translational_data.velocity[i] += translational_data.acceleration[i]/SAMPLING_FREQ;
+		rotational_data.velocity[i] = data[j];
 	}
 }
 
 //This must be called by a timer with frequency SAMPLING_FREQ
-void MPU6050::updatePositionData(){
+void MPU6050::_update_position_data(){
 	//Integrate angular velocities
-	for(int i = 0; i < N_MOTION_VAR; i++){
-		positionData[i] += velocityData[i]/SAMPLING_FREQ;
+	for(uint8_t i = 0; i < N_TRANS_VAR; i++){
+		rotational_data.position[i] += rotational_data.velocity[i]/SAMPLING_FREQ;
 	}
 }
 
-void MPU6050::updateDataArrays(){
-	updateAccelerationData();
-	updateVelocityData();
-	updatePositionData();
+//Saves the array data in the motion structs
+void MPU6050::update_motion_data(int16_t *data){
+	_calibrate_sensor_data(data);
+	_update_acceleration_data(data);
+	_update_velocity_data(data);
+	_update_position_data();
 }
 
 
 
 //Must be called after TWI_Master_intialize() and sei()
 MPU6050::MPU6050(){
-	for(int i = 0; i < N_MOTION_VAR; i++){
-		accelerationData[i % 3] = 0;
-		velocityData[i] = 0;
-		positionData[i] = 0;
-	}
 	
 	//exit standby mode
 	twi.write_data_to_register(MPU_ADDRESS, PWR_MGMT_1, WAKE_UP);
@@ -68,28 +82,42 @@ MPU6050::MPU6050(){
 	twi.write_data_to_register(MPU_ADDRESS, ACCEL_CONFIG, M_S2_2G);
 	
 	//Read and store offset values
-	determineOffsetArray();
+	_calculate_offset();
 }
 
-//Reads the motion registers from the MPU and saves the data in sensorData
-void MPU6050::readMotionData(){
+void MPU6050::config_gyroscope_range(uint8_t range){
+	twi.write_data_to_register(MPU_ADDRESS, GYRO_CONFIG, range);
+}
+
+void MPU6050::config_accelerometer_range(uint8_t range){
+	twi.write_data_to_register(MPU_ADDRESS, ACCEL_CONFIG, range);
+}
+
+
+
+//Reads the motion registers from the MPU into data[]
+void MPU6050::read_motion_data(int16_t *data){
 	//Every sensor variable two bytes long
-	unsigned char motion_registers[2*N_MESSURE_VAR];
+	unsigned char motion_registers[2*N_MEASURE_VAR];
 	
 	//Read all motion registers
-	twi.read_data_from_address(MPU_ADDRESS, ACC_X, motion_registers, N_MESSURE_VAR*2);
+	twi.read_data_from_address(MPU_ADDRESS, ACC_X, motion_registers, N_MEASURE_VAR*2);
 	
-	//Put high and low bytes into sensorData
-	for(int i = 0; i < 2*N_MESSURE_VAR; i += 2){
-		sensorData[i/2] = motion_registers[i] << 8 | motion_registers[i + 1];
-	}
+	//Put high and low bytes into data
+	for(int i = 0; i < 2*N_TRANS_VAR; i += 2){
+		int j = i + 2*(N_TRANS_VAR + 1); //Used to skip temperature data
 
-	//Add/subtract offset
-	calibrateSensorData();
+		data[i/2] = motion_registers[i] << 8 | motion_registers[i + 1];
+		data[j/2] = motion_registers[j] << 8 | motion_registers[j + 1];
+	}
 }
 
-void MPU6050::calibrateSensorData(){
-	for(int i = 0; i < N_MESSURE_VAR; i++){
-		sensorData[i] -= sensorOffset[i];
+//Subtracts the offset values from data
+void MPU6050::_calibrate_sensor_data(int16_t *data){
+	for(uint8_t i = 0; i < N_TRANS_VAR; i++){
+		uint8_t j = i + N_TRANS_VAR;
+		
+		data[i] -= translational_data.offset[i];
+		data[j] -= rotational_data.offset[i];
 	}
 }

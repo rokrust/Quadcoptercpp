@@ -27,45 +27,53 @@
 #define N_TRANS_VAR 3
 #define N_ROT_VAR 3
 #define N_MOTION_VAR N_TRANS_VAR + N_ROT_VAR
-#define N_MESSURE_VAR 7 //Acceleration, angular velocity and temperature
+#define N_MEASURE_VAR 7 //Acceleration, angular velocity and temperature
 #define g_SENSOR_VALUE 16384
 #define MPU6050_MAX_SENSOR_VALUE 32767
 #define MPU6050_MAX_DEG_S_VALUE 250
+#define MPU6050_OFFSET_AVG_ITERATIONS 50
 
+struct Motion_data{
+	int16_t acceleration[N_TRANS_VAR];
+	int16_t velocity[N_TRANS_VAR];
+	int16_t position[N_TRANS_VAR];
+	int16_t offset[N_TRANS_VAR];
+
+};
 
 class MPU6050{
 private:
 	TWI twi;
-	int16_t accelerationData[N_TRANS_VAR];
-	int16_t velocityData[N_MOTION_VAR];
-	int16_t positionData[N_MOTION_VAR];
-
-	int16_t sensorOffset[N_MESSURE_VAR];
-
-	int16_t sensorData[N_MESSURE_VAR];
 	
-	void calibrateSensorData();
-	void determineOffsetArray();
+	Motion_data translational_data;
+	Motion_data rotational_data;
 
-	void updateAccelerationData();
-	void updateVelocityData();
-	void updatePositionData();
+	void _calibrate_sensor_data(int16_t *data);
+	void _calculate_offset();
+
+	void _update_acceleration_data(int16_t *data);
+	void _update_velocity_data(int16_t *data);
+	void _update_position_data();
 
 
 public:
 	MPU6050();
-	void readMotionData();
-	void updateDataArrays();
 
-	int16_t getXTranslation(){return positionData[0];}
-	int16_t getYTranslation(){return positionData[1];}
-	int16_t getZTranslation(){return positionData[2];}
-	int16_t getXRotation(){return positionData[3];}
-	int16_t getYRotation(){return positionData[4];}
-	int16_t getZRotation(){return positionData[5];}
+	void config_gyroscope_range(uint8_t range);
+	void config_accelerometer_range(uint8_t range);
 
-	//Convert from sensor values to degrees per second
+	//Used for receiving and storing motion data.
+	void read_motion_data(int16_t *data);
+	void update_motion_data(int16_t *data);
+
+	int16_t* getTranslation(){return translational_data.position;}
+	int16_t* getRotation(){return rotational_data.position;}
+	
+	struct Motion_data get_rotational_data(){return rotational_data;}
+	struct Motion_data get_translational_data(){return translational_data;}
+
+	/*//Convert from sensor values to degrees per second
 	int16_t getXRotationDeg(){return (int16_t)(((int32_t)positionData[3]*MPU6050_MAX_DEG_S_VALUE)/MPU6050_MAX_SENSOR_VALUE);}
 	int16_t getYRotationDeg(){return (int16_t)(((int32_t)positionData[4]*MPU6050_MAX_DEG_S_VALUE)/MPU6050_MAX_SENSOR_VALUE);}
-	int16_t getZRotationDeg(){return (int16_t)(((int32_t)positionData[5]*MPU6050_MAX_DEG_S_VALUE)/MPU6050_MAX_SENSOR_VALUE);}
+	int16_t getZRotationDeg(){return (int16_t)(((int32_t)positionData[5]*MPU6050_MAX_DEG_S_VALUE)/MPU6050_MAX_SENSOR_VALUE);}*/
 };
