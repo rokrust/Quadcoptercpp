@@ -4,10 +4,11 @@
 #include "motor_control.h"
 #include "timer16.h"
 #include "config.h"
+#include "MotionControl.h"
 
 class Quadcopter{
 private:
-	MPU6050 mpu;
+	Motion_control motion_control;
 	//GPS gps;
 	NRF24L01 transceiver;
 	MotorControl controller;

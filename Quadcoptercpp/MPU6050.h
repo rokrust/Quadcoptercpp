@@ -33,28 +33,18 @@
 #define MPU6050_MAX_DEG_S_VALUE 250
 #define MPU6050_OFFSET_AVG_ITERATIONS 50
 
-struct Motion_data{
-	int16_t acceleration[N_TRANS_VAR];
-	int16_t velocity[N_TRANS_VAR];
-	int16_t position[N_TRANS_VAR];
-	int16_t offset[N_TRANS_VAR];
-
-};
-
 class MPU6050{
 private:
 	TWI twi;
 	
-	Motion_data translational_data;
-	Motion_data rotational_data;
+	int16_t offset[N_MOTION_VAR];
 
-	void _calibrate_sensor_data(int16_t *data);
 	void _calculate_offset();
 
 	void _update_acceleration_data(int16_t *data);
 	void _update_velocity_data(int16_t *data);
 	void _update_position_data();
-
+	void _calibrate_sensor_data(int16_t *data);
 
 public:
 	MPU6050();
@@ -64,16 +54,5 @@ public:
 
 	//Used for receiving and storing motion data.
 	void read_motion_data(int16_t *data);
-	void update_motion_data(int16_t *data);
-
-	int16_t* getTranslation(){return translational_data.position;}
-	int16_t* getRotation(){return rotational_data.position;}
-	
-	struct Motion_data get_rotational_data(){return rotational_data;}
-	struct Motion_data get_translational_data(){return translational_data;}
-
-	/*//Convert from sensor values to degrees per second
-	int16_t getXRotationDeg(){return (int16_t)(((int32_t)positionData[3]*MPU6050_MAX_DEG_S_VALUE)/MPU6050_MAX_SENSOR_VALUE);}
-	int16_t getYRotationDeg(){return (int16_t)(((int32_t)positionData[4]*MPU6050_MAX_DEG_S_VALUE)/MPU6050_MAX_SENSOR_VALUE);}
-	int16_t getZRotationDeg(){return (int16_t)(((int32_t)positionData[5]*MPU6050_MAX_DEG_S_VALUE)/MPU6050_MAX_SENSOR_VALUE);}*/
+	void read_calibrated_motion_data(int16_t *data);
 };

@@ -15,58 +15,18 @@ void MPU6050::_calculate_offset(){
 	for(int i = 0; i < MPU6050_OFFSET_AVG_ITERATIONS; i++){
 		read_motion_data(prev_data);
 
-		for(int i = 0; i < N_MEASURE_VAR; i++){
+		for(int i = 0; i < N_MOTION_VAR; i++){
 			cumulative_data[i] += prev_data[i];
 		}
 	}
 
 	//Take the average of all the data
-	for(int i = 0; i < N_MEASURE_VAR; i++){
+	//and save the result in offset array
+	for(int i = 0; i < N_MOTION_VAR; i++){
 		cumulative_data[i] /= MPU6050_OFFSET_AVG_ITERATIONS;
-	}
-
-	//Split the result into the offset arrays
-	for(int i = 0; i < N_TRANS_VAR; i++){
-		int j = i + N_TRANS_VAR + 1;
-
-		translational_data.offset[i] = (int16_t)cumulative_data[i];
-		rotational_data.offset[i] = (int16_t)cumulative_data[j];
+		offset[i] = cumulative_data[i];
 	}
 }
-
-void MPU6050::_update_acceleration_data(int16_t *data){
-	for(int i = 0; i < N_TRANS_VAR; i++){
-		translational_data.acceleration[i] = data[i];
-	}
-}
-
-void MPU6050::_update_velocity_data(int16_t *data){
-	//Integrate data from the accelerometers
-	//Save the angular velocity (index j)
-	for(uint8_t i = 0; i < N_TRANS_VAR; i++){
-		uint8_t j = i + N_TRANS_VAR;
-
-		translational_data.velocity[i] += translational_data.acceleration[i]/SAMPLING_FREQ;
-		rotational_data.velocity[i] = data[j];
-	}
-}
-
-//This must be called by a timer with frequency SAMPLING_FREQ
-void MPU6050::_update_position_data(){
-	//Integrate angular velocities
-	for(uint8_t i = 0; i < N_TRANS_VAR; i++){
-		rotational_data.position[i] += rotational_data.velocity[i]/SAMPLING_FREQ;
-	}
-}
-
-//Saves the array data in the motion structs
-void MPU6050::update_motion_data(int16_t *data){
-	_calibrate_sensor_data(data);
-	_update_acceleration_data(data);
-	_update_velocity_data(data);
-	_update_position_data();
-}
-
 
 
 //Must be called after TWI_Master_intialize() and sei()
@@ -112,12 +72,17 @@ void MPU6050::read_motion_data(int16_t *data){
 	}
 }
 
+void MPU6050::read_calibrated_motion_data(int16_t *data){
+	_calibrate_sensor_data(data);
+	read_motion_data(data);
+}
+
 //Subtracts the offset values from data
 void MPU6050::_calibrate_sensor_data(int16_t *data){
 	for(uint8_t i = 0; i < N_TRANS_VAR; i++){
 		uint8_t j = i + N_TRANS_VAR;
 		
-		data[i] -= translational_data.offset[i];
-		data[j] -= rotational_data.offset[i];
+		data[i] -= offset[i];
+		data[j] -= offset[i];
 	}
 }
