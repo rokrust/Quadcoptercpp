@@ -1,6 +1,5 @@
 ﻿#include "motor_control.h"
-#define F_CPU 16000000UL
-#include <util/delay.h>
+#include "config.h"
 
 MotorControl::MotorControl(): xAngleRef(0), yAngleRef(0), zAngleRef(0), zTranslationRef(10000){
 	for(int i = 0; i < N_MOTORS; i++){

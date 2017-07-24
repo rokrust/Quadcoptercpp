@@ -1,9 +1,7 @@
 ﻿#include "NRF24L01.h"
-
-#define F_CPU 16000000UL
+#include "config.h"
 #include <avr/io.h>
 #include <stdio.h>
-#include <util/delay.h>
 
 
 //Change to active mode only happens if CE is set high

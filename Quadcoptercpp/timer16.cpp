@@ -1,6 +1,5 @@
 ﻿#include "timer16.h"
-
-#define F_CPU 16000000
+#include "config.h"
 
 #include <stdio.h>
 #include <avr/io.h>

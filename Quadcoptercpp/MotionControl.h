@@ -12,13 +12,15 @@ private:
 	Motion_data translational_data;
 	Motion_data rotational_data;
 
-	void _update_acceleration_data(int16_t *data);
-	void _update_velocity_data(int16_t *data);
+
+	void _integrate_acceleration();
+	void _integrate_angular_velocity();
 	void _update_position_data();
 
 public:
 	void read_raw_motion_data();
-	void update_motion_data();
+	void process_raw_motion_data();
+	void clear_motion_data();
 
 	struct Motion_data get_rotational_data() {return rotational_data;}
 	struct Motion_data get_translational_data() {return translational_data;}
