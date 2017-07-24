@@ -8,7 +8,7 @@
 
 class Quadcopter{
 private:
-	Motion_control motion_control;
+	Motion_processor motion;
 	//GPS gps;
 	NRF24L01 transceiver;
 	MotorControl controller;

@@ -41,6 +41,12 @@ MPU6050::MPU6050(){
 	//Set acceleration sensitivity
 	twi.write_data_to_register(MPU_ADDRESS, ACCEL_CONFIG, M_S2_2G);
 	
+	//Set external interrupt to active low
+	twi.write_data_to_register(MPU_ADDRESS, INT_PIN_CFG, ~(1 << INT_LEVEL));
+
+	//Enable data ready interrupt, disable all else
+	twi.write_data_to_register(MPU_ADDRESS, INT_ENABLE, (1 << DATA_RDY_EN));
+
 	//Read and store offset values
 	_calculate_offset();
 }
@@ -72,6 +78,7 @@ void MPU6050::read_motion_data(int16_t *data){
 	}
 }
 
+//Same as read_motion_data but with offset values subtracted
 void MPU6050::read_calibrated_motion_data(int16_t *data){
 	_calibrate_sensor_data(data);
 	read_motion_data(data);

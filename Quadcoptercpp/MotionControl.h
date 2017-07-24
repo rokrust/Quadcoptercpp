@@ -6,7 +6,7 @@ struct Motion_data{
 	int16_t position[N_TRANS_VAR];
 };
 
-class Motion_control{
+class Motion_processor{
 private:
 	MPU6050 imu;
 	Motion_data translational_data;
@@ -17,6 +17,7 @@ private:
 	void _update_position_data();
 
 public:
+	void read_raw_motion_data();
 	void update_motion_data();
 
 	struct Motion_data get_rotational_data() {return rotational_data;}

@@ -17,12 +17,12 @@ Quadcopter::Quadcopter(){
 }
 
 void Quadcopter::readIMU(){
-	//mpu.read_motion_data();
+	
 }
 
 //Timing sensitive. Used in integration.
 void Quadcopter::updateMotionData(){
-	//mpu.update_motion_arrays();
+	motion.update_motion_data();
 }
 
 void Quadcopter::updateController(){

@@ -24,6 +24,22 @@
 	#define M_S2_8G 16
 	#define M_S2_16G 24
 
+#define INT_PIN_CFG 0x37
+	#define INT_LEVEL 7
+	#define INT_OPEN 6	    //0: push-pull, 1: open drain
+	#define LATCH_INT_EN 5  //0: 50 us interrupt, 1: until clear
+	#define INT_RD_CLEAR 4  //0: Interrupt cleared only by reading status reg
+	#define FSYNC_INT_LEVEL 3
+	#define FSYNC_INT_EN 2
+	#define I2C_BYPASS_EN 1 //0: Access to MPU auxiliary I2C bus
+
+#define INT_ENABLE 0x38
+	#define FIFO_OFLOW_EN 4
+	#define I2C_MST_INT_EN 3
+	#define DATA_RDY_EN 0
+
+
+
 #define N_TRANS_VAR 3
 #define N_ROT_VAR 3
 #define N_MOTION_VAR N_TRANS_VAR + N_ROT_VAR
