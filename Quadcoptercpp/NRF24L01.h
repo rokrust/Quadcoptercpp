@@ -68,10 +68,10 @@ class NRF24L01{
 private:
 	Spi spi;
 
-	void readNrf(uint8_t reg, uint8_t* val, uint8_t nBytes = 1);
-	void writeNrf(uint8_t reg, uint8_t* val, uint8_t nBytes = 1);
-	void setRxMode();
-	void setTxMode();
+	void _read_nrf(uint8_t reg, uint8_t* val, uint8_t nBytes = 1);
+	void _write_nrf(uint8_t reg, uint8_t* val, uint8_t nBytes = 1);
+	void _set_rx_mode();
+	void _set_tx_mode();
 	void reset();
 
 public:
@@ -80,5 +80,5 @@ public:
 	void listen(); //can't transmit while listening. Run receive to stop listening
 	void receive(uint8_t* data);
 	void transmit(uint8_t* data);
-
+	void set_payload_width(uint8_t payload_width, uint8_t pipe);
 };

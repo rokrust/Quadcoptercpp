@@ -36,7 +36,7 @@ ISR(INT0_vect){
 
 //Update sensor values
 ISR(TIMER1_COMPA_vect){
-	quadcopter.updateMotionData();
+	quadcopter.update_motion_data();
 	quadcopter.updateController();
 }
 
@@ -47,12 +47,6 @@ int main(void)
 	//Constructors
 	fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
 	USART_init(MYUBRR);
-	//Lcd lcd;
-	//MotorControl motorControl;
-	//Joystick joystick;
-	//NRF24L01 radioController;
-	//uint8_t joystick_data[2];
-	//Adc adc;
 
 	
 	//lcd.writeString(0, 0, "AccX: ");
@@ -63,25 +57,6 @@ int main(void)
 	uint8_t val[PAYLOAD_WIDTH];
 	while (1)
 	{
-
-	//Recieve
-	nrf.listen();
-	_delay_ms(100);
-	nrf.recieve(val);
-	printf("Val 1: %d, Val 2: %d\n", val[0], val[1]);
-	_delay_ms(10);
-	
-	//joystick_data[0] = adc.read(0);
-	//joystick_data[1] = adc.read(1);
-	//printf("x: %d, y: %d\n", joystick_data[0], joystick_data[1]);
-	//radioController.transmit(joystick_data);
-	
-	
-	//printf("Test: %d\n", USART_receive());
-	//unsigned char a = joystick.readX();
-	//USART_transmit(a);
-	//printf("joystick: %d\n", a);
-	
 	//motorControl.determineMotorInputs();
 		//sprintf(numberArray, "%d", mpu.getMovementData(0));
 		//lcd.writeString(0, 48, numberArray);

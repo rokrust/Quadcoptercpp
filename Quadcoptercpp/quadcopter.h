@@ -24,7 +24,7 @@ public:
 
 	//Calculate acceleration/angular acceleration, velocity/angular velocity 
 	//and position/angles from IMU data
-	void updateMotionData();
+	void update_motion_data();
 
 	//Update motor speeds
 	void updateController();

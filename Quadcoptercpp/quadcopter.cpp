@@ -21,7 +21,7 @@ void Quadcopter::readIMU(){
 }
 
 //Timing sensitive. Used in integration.
-void Quadcopter::updateMotionData(){
+void Quadcopter::update_motion_data(){
 	motion.process_raw_motion_data();
 }
 
