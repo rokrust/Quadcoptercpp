@@ -6,6 +6,7 @@
  */ 
 
 #include "quadcopter.h"
+#include "usart.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -15,31 +16,39 @@
 #include <math.h>
 #include <stdlib.h>
 
-Quadcopter quadcopter;
+
+//Quadcopter quadcopter;
 
 int main(void)
 {
-
+	fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
+	USART_init(MYUBRR);
+	
+	Quadcopter quadcopter;
 	while (1){
-		quadcopter.readIMU();
+		//quadcopter.readIMU();
+		quadcopter.test1();
+		//printf("HALLO\n");
 	}
 
 }
 
+/*
 //Recieve message when the radio controller
 //toggles the interrupt pin (msg recieved)
 ISR(INT0_vect){
-	quadcopter.recieveRemotePayload();
+	//quadcopter.recieveRemotePayload();
 
 }
 
 
 //Update sensor values
 ISR(TIMER1_COMPA_vect){
-	quadcopter.update_motion_data();
-	quadcopter.updateController();
+	//quadcopter.update_motion_data();
+	//quadcopter.updateController();
 }
 
+*/
 //OLD MAIN
 /*
 int main(void)

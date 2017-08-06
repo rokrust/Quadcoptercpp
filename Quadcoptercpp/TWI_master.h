@@ -27,7 +27,7 @@
 /****************************************************************************
   TWI Status/Control register definitions
 ****************************************************************************/
-#define TWI_BUFFER_SIZE 15   // Set this to the largest message size that will be sent including address byte.
+#define TWI_BUFFER_SIZE 23   // Set this to the largest message size that will be sent including address byte.
 
 #define WRITE_FLAG 0
 #define READ_FLAG 1
@@ -64,7 +64,7 @@ public:
 	void start_transceiver( void );
 	unsigned char get_data_from_transceiver( unsigned char *, unsigned char );
 
-	void read_data_from_address(unsigned char, unsigned char, unsigned char*, unsigned char);
+	void read_data_from_address(unsigned char, unsigned char, unsigned char*, unsigned char = 1);
 	void write_data_to_register(unsigned char, unsigned char, unsigned char);
 };
 

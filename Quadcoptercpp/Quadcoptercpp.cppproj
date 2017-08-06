@@ -147,6 +147,12 @@
     <Compile Include="adc.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="BMP180.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="BMP180.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="custom_cout.cpp">
       <SubType>compile</SubType>
     </Compile>

@@ -31,6 +31,7 @@ void MPU6050::_calculate_offset(){
 
 //Must be called after TWI_Master_intialize() and sei()
 MPU6050::MPU6050(){
+	//printf("Define MPU\n");
 	
 	//exit standby mode
 	twi.write_data_to_register(MPU_ADDRESS, PWR_MGMT_1, WAKE_UP);
@@ -42,10 +43,10 @@ MPU6050::MPU6050(){
 	twi.write_data_to_register(MPU_ADDRESS, ACCEL_CONFIG, M_S2_2G);
 	
 	//Set external interrupt to active low
-	twi.write_data_to_register(MPU_ADDRESS, INT_PIN_CFG, ~(1 << INT_LEVEL));
+	//twi.write_data_to_register(MPU_ADDRESS, INT_PIN_CFG, ~(1 << INT_LEVEL));
 
 	//Enable data ready interrupt, disable all else
-	twi.write_data_to_register(MPU_ADDRESS, INT_ENABLE, (1 << DATA_RDY_EN));
+	//twi.write_data_to_register(MPU_ADDRESS, INT_ENABLE, (1 << DATA_RDY_EN));
 
 	//Read and store offset values
 	_calculate_offset();

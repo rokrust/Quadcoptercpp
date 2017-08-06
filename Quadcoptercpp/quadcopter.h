@@ -5,14 +5,16 @@
 #include "timer16.h"
 #include "config.h"
 #include "MotionControl.h"
+#include "BMP180.h"
 
 class Quadcopter{
 private:
 	Motion_processor motion;
+	BMP180 bmp;
 	//GPS gps;
-	NRF24L01 transceiver;
-	MotorControl controller;
-	Timer16 samplingTimer;
+	//NRF24L01 transceiver;
+	//MotorControl controller;
+	//Timer16 samplingTimer;
 
 	uint8_t radioMsg[PAYLOAD_WIDTH];
 
@@ -33,15 +35,20 @@ public:
 	void recieveRemotePayload();
 
 	void test1(){
-		samplingTimer.setToTickMode(); 
-		samplingTimer.enable();
+		bmp.read_raw_data();
+		uint32_t p = bmp.calculate_pressure();
+		uint32_t height = bmp.calculate_altitude();
+		
+		printf("Pressure: %ld\nHeight: %ld\n\n", p, height);
+		//samplingTimer.setToTickMode(); 
+		//samplingTimer.enable();
 	}
 	
 	void test2(){
-		uint32_t timeStamp = samplingTimer.currentTime(); 
-		printf("time: %lu\n", timeStamp); 
-		samplingTimer.setToInterruptMode(SAMPLING_FREQ);
-		samplingTimer.enable();
+		//uint32_t timeStamp = samplingTimer.currentTime(); 
+		//printf("time: %lu\n", timeStamp); 
+		//samplingTimer.setToInterruptMode(SAMPLING_FREQ);
+		//samplingTimer.enable();
 	}
 
 	void test3(){
