@@ -36,10 +36,10 @@ public:
 
 	void test1(){
 		bmp.read_raw_data();
+		int32_t temperature = bmp.calculate_temperature();
 		uint32_t p = bmp.calculate_pressure();
-		uint32_t height = bmp.calculate_altitude();
-		
-		printf("Pressure: %ld\nHeight: %ld\n\n", p, height);
+		int16_t altitude = bmp.calculate_altitude();
+		//printf("Pressure: %ld\nHeight: %ld\nTemperature: %d\n", p, height, temperature);
 		//samplingTimer.setToTickMode(); 
 		//samplingTimer.enable();
 	}

@@ -61,7 +61,7 @@
 #define RX_ADDR_P0 0x0A
 
 #define SS 2 //Also known as CSN, active low
-#define CE 0 //Active high
+#define CE 1 //Active high
 
 //USES STATIC PAYLOAD LENGTH
 class NRF24L01{

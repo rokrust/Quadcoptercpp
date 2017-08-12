@@ -55,17 +55,18 @@ extern union TWI_statusReg TWI_statusReg;
 
 class TWI{
 private:
-	
-public:
-	TWI( void );
 	unsigned char transceiver_busy( void );
 	unsigned char get_state_info( void );
 	void start_transceiver_with_data( unsigned char * , unsigned char );
 	void start_transceiver( void );
 	unsigned char get_data_from_transceiver( unsigned char *, unsigned char );
 
+	
+public:
+	TWI( void );
+	
 	void read_data_from_address(unsigned char, unsigned char, unsigned char*, unsigned char = 1);
-	void write_data_to_register(unsigned char, unsigned char, unsigned char);
+	void write_data_to_register(unsigned char, unsigned char, unsigned char*, unsigned char = 1);
 };
 
 /****************************************************************************

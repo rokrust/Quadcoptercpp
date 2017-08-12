@@ -13,8 +13,10 @@
 	#define BMP_OSS_4 (2 << 6)
 	#define BMP_OSS_8 (3 << 6)
 
-#define BMP180_TEMP_BASE_ADDR                0x2E // temperature measurement
-#define BMP180_PRES_BASE_ADDR				 0x34 //Add _oss value for correct address
+#define DATA_REG_BASE_ADDR 0xF6
+
+#define BMP180_TEMP_READ_CMD               0x2E // temperature measurement
+#define BMP180_PRES_READ_CMD				 0x34 //Add _oss value for correct address
 #define BMP180_P1_ADDR               0x34 // pressure measurement (OSS=0, 4.5ms)
 #define BMP180_P2_ADDR               0x74 // pressure measurement (OSS=1, 7.5ms)
 #define BMP180_P4_ADDR               0xB4 // pressure measurement (OSS=2, 13.5ms)
@@ -47,7 +49,7 @@ private:
 	uint8_t _n_oversamples;
 	uint16_t _conversion_time;
 	uint8_t _P_addr;
-	uint16_t P_0;
+	uint32_t P_0;
 	int16_t _raw_temperature_data;
 	uint32_t _raw_pressure_data;
 	uint8_t _oss;
@@ -58,7 +60,7 @@ public:
 	BMP180(uint8_t oss = 0);
 	void read_raw_data();
 	uint32_t calculate_pressure();
-	uint16_t calculate_temperature();
+	int32_t calculate_temperature();
 	int16_t calculate_altitude();
 	
 };

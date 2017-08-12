@@ -151,22 +151,31 @@ void TWI::read_data_from_address(unsigned char chip_address, unsigned char regis
 	temp[0] = chip_address << 1 | WRITE_FLAG;
 	temp[1] = register_address;
 	start_transceiver_with_data(temp, 2);
-	
-	temp[0] = chip_address << 1 | READ_FLAG;
 
+	//Begin reading operation
+	temp[0] = chip_address << 1 | READ_FLAG;
 	start_transceiver_with_data(temp, msgSize + 1);
+	
+	//Gather data
 	get_data_from_transceiver(temp, msgSize + 1);
 	
-
+	//Skip TWI address
 	for(int i = 0; i < msgSize; i++){
 		msg[i] = temp[i+1];
 	}
 }
 
 
-void TWI::write_data_to_register(unsigned char chip_address, unsigned char register_address, unsigned char value){
-	unsigned char temp[3] = {chip_address << 1 | WRITE_FLAG, register_address, value};
-	start_transceiver_with_data(temp, 3);
+void TWI::write_data_to_register(unsigned char chip_address, unsigned char register_address, unsigned char* msg, unsigned char msgSize){
+	unsigned char temp[msgSize + 2];
+	temp[0] = chip_address << 1 | WRITE_FLAG;
+	temp[1] = register_address;
+	
+	for(int i = 0; i < msgSize; i++){
+		temp[i + 2]	= msg[i];
+	}
+	
+	start_transceiver_with_data(temp, msgSize + 2);
 }
 
 

@@ -171,6 +171,9 @@
     <Compile Include="gps.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="HMC5883L.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="joystick.cpp">
       <SubType>compile</SubType>
     </Compile>
