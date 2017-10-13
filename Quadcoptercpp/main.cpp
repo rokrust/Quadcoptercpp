@@ -21,8 +21,8 @@
 
 int main(void)
 {
-	fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
-	USART_init(MYUBRR);
+	//fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
+	//USART_init(MYUBRR);
 	
 	Quadcopter quadcopter;
 	while (1){

@@ -1,4 +1,6 @@
 #include "MPU6050.h"
+#include "BMP180.h"
+#include "HMC5883L.h"
 
 struct Motion_data{
 	int16_t acceleration[N_TRANS_VAR];
@@ -9,18 +11,30 @@ struct Motion_data{
 class Motion_processor{
 private:
 	MPU6050 imu;
+	HMC5883L magnetometer;
+	BMP180 barometer;
+	
 	Motion_data translational_data;
 	Motion_data rotational_data;
-
+	
+	int16_t _acceleration_vector[MPU6050_ACCEL_DEG_FREEDOM];
+	int16_t _angular_velocity_vector[MPU6050_GYRO_DEG_FREEDOM];
+	int16_t _north_vector[HMC5883L_DEG_FREEDOM];
+	
+	
 
 	void _integrate_acceleration();
 	void _integrate_angular_velocity();
 	void _update_position_data();
 
 public:
+	void read_raw_imu_data();
+	void read_raw_magnetometer_data();
+	void read_raw_barometer_data();
 	void read_raw_motion_data();
 	void process_raw_motion_data();
 	void clear_motion_data();
+	void fuse_motion_data();
 
 	struct Motion_data get_rotational_data() {return rotational_data;}
 	struct Motion_data get_translational_data() {return translational_data;}

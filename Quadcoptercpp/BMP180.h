@@ -15,7 +15,7 @@
 
 #define DATA_REG_BASE_ADDR 0xF6
 
-#define BMP180_TEMP_READ_CMD               0x2E // temperature measurement
+#define BMP180_TEMP_READ_CMD                 0x2E // temperature measurement
 #define BMP180_PRES_READ_CMD				 0x34 //Add _oss value for correct address
 #define BMP180_P1_ADDR               0x34 // pressure measurement (OSS=0, 4.5ms)
 #define BMP180_P2_ADDR               0x74 // pressure measurement (OSS=1, 7.5ms)

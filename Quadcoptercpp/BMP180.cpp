@@ -6,9 +6,9 @@
 
 void BMP180::_read_calibration_parameters(){
 	uint8_t calibration_data[BMP_EEPROM_SIZE];
-	printf("Calibration data allocated\n");
+	//printf("Calibration data allocated\n");
 	_twi.read_data_from_address(BMP_ADDRESS, BMP_EEPROM_START_ADDR, calibration_data, BMP_EEPROM_SIZE);
-	printf("Calibration data read\n");
+	//printf("Calibration data read\n");
 	
 	_calibration_parameters.AC1 = (int16_t)(((int32_t)calibration_data[0]  << 8) | calibration_data[1]);
 	_calibration_parameters.AC2 = (int16_t)(((int32_t)calibration_data[2]  << 8) | calibration_data[3]);
@@ -96,12 +96,12 @@ uint32_t BMP180::calculate_pressure(){
 	return p;
 }
 
+//Returns altitude in cm
 int16_t BMP180::calculate_altitude(){
 	uint32_t P = calculate_pressure();
-	printf("Pressure: %lu, %lu\n", P, P_0);
+
 	//Decent approximation to height under 1000 meters
-	int16_t altitude = (P-P_0)/12;
-	printf("Altitude: %d\n", altitude);
+	int16_t altitude = ((int32_t)(P-P_0)*25)/3;
 	
 	return altitude;
 	

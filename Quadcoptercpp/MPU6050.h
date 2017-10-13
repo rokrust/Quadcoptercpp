@@ -12,12 +12,14 @@
 	#define WAKE_UP 0x00
 
 #define ACC_X 0x3B
+#define MPU6050_GYRO_DEG_FREEDOM 3
 #define GYRO_CONFIG 0x1A
 	#define DEG_S_250 0
 	#define DEG_S_500 8
 	#define DEG_S_1000 16
 	#define DEG_S_2000 24
 
+#define MPU6050_ACCEL_DEG_FREEDOM 3
 #define ACCEL_CONFIG 0x1B
 	#define M_S2_2G 0
 	#define M_S2_4G 8

@@ -9,7 +9,7 @@
 
 class Quadcopter{
 private:
-	Motion_processor motion;
+	//Motion_processor motion;
 	BMP180 bmp;
 	//GPS gps;
 	//NRF24L01 transceiver;
@@ -38,8 +38,8 @@ public:
 		bmp.read_raw_data();
 		int32_t temperature = bmp.calculate_temperature();
 		uint32_t p = bmp.calculate_pressure();
-		int16_t altitude = bmp.calculate_altitude();
-		//printf("Pressure: %ld\nHeight: %ld\nTemperature: %d\n", p, height, temperature);
+		//int16_t altitude = bmp.calculate_altitude();
+ 		printf("Pressure: %ld\nTemperature: %d\n", p, temperature);
 		//samplingTimer.setToTickMode(); 
 		//samplingTimer.enable();
 	}

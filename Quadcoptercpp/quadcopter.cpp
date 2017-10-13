@@ -2,11 +2,10 @@
 #include "usart.h"
 
 Quadcopter::Quadcopter(){
-	//fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
-	//USART_init(MYUBRR);
-	printf("After usart\n");
+	fdevopen((int (*)(char,  struct __file *))USART_transmit, (int (*)(struct __file *))USART_receive); //Link printf to USB
+	USART_init(MYUBRR);
 	//controller = MotorControl();
-	//bmp = BMP180(BMP_OSS_1);
+	bmp = BMP180(BMP_OSS_1);
 	//samplingTimer = Timer16(SAMPLING_FREQ);
 	//samplingTimer.enable();
 

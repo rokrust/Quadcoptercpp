@@ -1,4 +1,6 @@
+#include "TWI_master.h"
 #include <stdint.h>
+
 
 #define HMC5883L_ADDRESS 0x1E
 #define HMC5883L_CONFIG_A 0x00
@@ -12,6 +14,10 @@
 	
 #define HMC5883L_CONFIG_B 0x01
 #define HMC5883L_MODE 0x02
+	#define HS 7
+	#define MD1 1
+	#define MD0 0
+
 #define HMC5883L_X_OUT_BASE 0x03
 #define HMC5883L_Z_OUT_BASE 0x05
 #define HMC5883L_Y_OUT_BASE 0x07
@@ -20,13 +26,16 @@
 #define HMC5883L_ID_B 0x0B
 #define HMC5883L_ID_C 0x0C
 
+#define HMC5883L_N_RAW_DATA_BYTES 6
+#define HMC5883L_DEG_FREEDOM 3
+
 class HMC5883L{
 private:
 	TWI _twi;
-
+	
 public:
 	HMC5883L();
-	void read_raw_data();
+	void read_raw_data(int16_t *raw_data);
 	void calculate_orientation(int16_t *orientation);
 	
 };

@@ -12,21 +12,36 @@ void Motion_processor::_integrate_angular_velocity(){
 	}
 }
 
-//Reads the raw data from the IMU and saves it in the motion structs
-void Motion_processor::read_raw_motion_data(){
+//Combine data from gyro and magnetometer with a simple complementary filter
+void Motion_processor::fuse_motion_data(){
+}
+
+void Motion_processor::read_raw_imu_data(){
 	int16_t data[N_MOTION_VAR];
 	imu.read_calibrated_motion_data(data);
-
+	
 	for(uint8_t i = 0; i < N_TRANS_VAR; i++){
-		uint8_t j = N_TRANS_VAR + i;
-
-		translational_data.acceleration[i] = data[i];
-		rotational_data.velocity[i] = data[j];
+		_acceleration_vector = data[i];
+		_angular_velocity_vector = data[i];
 	}
 }
 
+void Motion_processor::read_raw_imu_data(){
+	magnetometer.read_raw_data(_north_vector);
+}
 
-//Integrate and do other time sensitive operations
+void Motion_processor::read_raw_barometer_data(){
+	barometer.read_raw_data();	
+}
+
+//Reads the raw data from the IMU and saves it in the motion structs
+//Reads the magnetometer data and saves it in _north_vector
+void Motion_processor::read_raw_motion_data(){
+	read_raw_imu_data();
+	read_raw_magnetometer_data();
+}
+
+//Fuse raw sensor data
 void Motion_processor::process_raw_motion_data(){
 	_integrate_angular_velocity();
 	_integrate_acceleration();
@@ -47,7 +62,7 @@ void Motion_processor::clear_motion_data(){
 
 /********************* Sensor Fusion *************************/
 /*
-//exponential moving avverage
+//exponential moving average
 accel_mag_ema = a * accel_mag + (1 - a) * accel_mag_ema;
 
 //Subtract gyro bias

@@ -27,7 +27,7 @@
 /****************************************************************************
   TWI Status/Control register definitions
 ****************************************************************************/
-#define TWI_BUFFER_SIZE 23   // Set this to the largest message size that will be sent including address byte.
+#define TWI_BUFFER_SIZE 24   // Set this to the largest message size that will be sent including address byte.
 
 #define WRITE_FLAG 0
 #define READ_FLAG 1
