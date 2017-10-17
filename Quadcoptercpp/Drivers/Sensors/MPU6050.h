@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TWI_master.h"
+#include "Drivers/Communication/TWI_master.h"
 #include "config.h"
 
 #include <stdint.h>

@@ -1,6 +1,6 @@
-#include "MPU6050.h"
-#include "BMP180.h"
-#include "HMC5883L.h"
+#include "Drivers/Sensors/MPU6050.h"
+#include "Drivers/Sensors/BMP180.h"
+#include "Drivers/Sensors/HMC5883L.h"
 
 struct Motion_data{
 	int16_t acceleration[N_TRANS_VAR];

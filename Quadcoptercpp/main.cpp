@@ -6,7 +6,7 @@
  */ 
 
 #include "quadcopter.h"
-#include "usart.h"
+#include "Drivers/Communication/usart.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>

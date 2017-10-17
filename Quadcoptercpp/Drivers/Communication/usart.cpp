@@ -1,5 +1,4 @@
 ﻿#include "usart.h"
-#include "lcd.h"
 #include <avr/io.h>
 
 void USART_init(unsigned int ubrr){

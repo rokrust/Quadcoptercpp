@@ -1,5 +1,5 @@
-﻿#include "spi.h"
-#include "usart.h"
+﻿#include "Drivers/Communication/spi.h"
+#include "Drivers/Communication/usart.h"
 
 #include <avr/io.h>
 #include <stdio.h>

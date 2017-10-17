@@ -1,11 +1,10 @@
-#include "gps.h"
-#include "lcd.h"
-#include "NRF24L01.h"
-#include "motor_control.h"
-#include "timer16.h"
+#include "Drivers/Sensors/gps.h"
+#include "Drivers/Sensors/NRF24L01.h"
+#include "Controller/motor_control.h"
+#include "Drivers/Timer/timer16.h"
 #include "config.h"
-#include "MotionControl.h"
-#include "BMP180.h"
+#include "Controller/MotionControl.h"
+#include "Drivers/Sensors/BMP180.h"
 
 class Quadcopter{
 private:

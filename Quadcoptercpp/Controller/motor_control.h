@@ -1,8 +1,8 @@
 #pragma once
 
-#include "MPU6050.h"
-#include "Motor.h"
-#include "gps.h"
+#include "Drivers/Sensors/MPU6050.h"
+#include "Drivers/Sensors/gps.h"
+#include "Drivers/Motor.h"
 
 //Once again: Put in a designated header file
 #define N_MOTORS 4

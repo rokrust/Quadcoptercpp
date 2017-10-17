@@ -1,6 +1,6 @@
 #include "motor.h"
-#include "pwm.h"
-#include "pwm16.h"
+#include "Drivers/Timer/pwm.h"
+#include "Drivers/Timer/pwm16.h"
 
 #include <util/delay.h>
 #include "config.h"

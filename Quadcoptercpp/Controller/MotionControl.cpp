@@ -19,15 +19,12 @@ void Motion_processor::fuse_motion_data(){
 void Motion_processor::read_raw_imu_data(){
 	int16_t data[N_MOTION_VAR];
 	imu.read_calibrated_motion_data(data);
+	magnetometer.read_raw_data(_north_vector);
 	
 	for(uint8_t i = 0; i < N_TRANS_VAR; i++){
-		_acceleration_vector = data[i];
-		_angular_velocity_vector = data[i];
+		_acceleration_vector[i] = data[i];
+		_angular_velocity_vector[i] = data[i];
 	}
-}
-
-void Motion_processor::read_raw_imu_data(){
-	magnetometer.read_raw_data(_north_vector);
 }
 
 void Motion_processor::read_raw_barometer_data(){

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "spi.h"
+#include "Drivers/Communication/spi.h"
 #include <stdint.h>
 #include <avr/interrupt.h>
 

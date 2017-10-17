@@ -1,8 +1,7 @@
 ﻿#include "lcd.h"
-#include "spi.h"
-#include "usart.h"
-#include "fonts.h"
-#include "superFonts.h"
+#include "Drivers/Communication/spi.h"
+#include "Interface/Fonts/fonts.h"
+#include "Interface/Fonts/superFonts.h"
 
 #include <util/delay.h>
 #include <avr/io.h>

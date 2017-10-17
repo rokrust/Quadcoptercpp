@@ -1,5 +1,5 @@
 ﻿#include "pwm.h"
-#include "adc.h"
+#include "Drivers/Sensors/adc.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
