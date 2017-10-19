@@ -1,3 +1,6 @@
+#include<cmath>
+#include<stdio.h>
+
 //Float type between 0 and 1 with guards against over- and underflow.
 class Fixfloat_t{
 private:
@@ -20,6 +23,10 @@ public:
 	Fixfloat_t operator+=(Fixfloat_t rhs);
 	Fixfloat_t operator-=(Fixfloat_t rhs);
 	Fixfloat_t operator*=(Fixfloat_t rhs);
+
+        
+        //Debug
+        void print() { printf("%f\n",(float)this->decimals/pow(2,this->exponent));}
 };
 
 class Quaternion{
