@@ -2,6 +2,10 @@
 #include <cmath>
 
 #define INT_SIZE 16
+#define SIGN_BIT_GET_MASK 0x80
+#define SIGN_BIT_SET_MASK 0xff
+#define SIGN_BIT_CLEAR_MASK 0x7f
+#define get_sign(x) (SIGN_BIT_GET_MASK & x) >> 8
 
 Fixfloat_t Fixfloat_t::operator+(const Fixfloat_t &rhs){
 		unsigned int d = this->decimals + rhs.decimals;
@@ -18,20 +22,55 @@ Fixfloat_t Fixfloat_t::operator-(const Fixfloat_t &rhs){
 	return Fixfloat_t(d, e);
 }
 
-//Inlcudes overflow check
-Fixfloat_t Fixfloat_t::operator*(const Fixfloat_t &rhs){
-	bool lhs_sign = signbit(this->exponent);
-	bool rhs_sign = signbit(rhs.exponent);
+//Fast float multiplication taking advantage of the fact that most multiplications will
+//result in overflow. Finds the number causing the overflow and lowers its resolution 
+//appropriately
+Fixfloat_t Fixfloat_t::operator*(Fixfloat_t rhs){
+	Fixfloat_t lhs(*this);
+	uint8_t expected_exponent = lhs.exponent + rhs.exponent;
+	bool expected_exponent_sign = SIGN_BIT_GET_MASK & expected_exponent;
+	lhs.exponent &= SIGN_BIT_CLEAR_MASK;
+	rhs.exponent &= SIGN_BIT_CLEAR_MASK;
 	
-	unsigned int decimals = this->decimals * rhs.decimals;
-	uint8_t exponent = this->exponent + rhs.exponent;
-	
-	//Overflow check and fix. Should maintain highest possible precision
-	if(decimals < this->decimals || decimals < rhs.decimals){
-		//Stuff
+	//Multiplication will result in overflow
+	if(expected_exponent & SIGN_BIT_CLEAR_MASK > INT_SIZE){		
+		//Both numbers longer than 8 bit
+		//Lower resolution until both decimals have length 8
+		bool lhs_overflow = lhs.exponent > 8;
+		bool rhs_overflow = rhs.exponent > 8;
+		if(lhs_overflow && rhs_overflow){
+			
+			lhs.decimals >> lhs.exponent - 8;
+			rhs.decimals >> rhs.exponent - 8;
+		}
+		
+		//Only one number causes overflow. Not a likely scenario as
+		//most numbers will utilize the full resolution
+		else{
+			uint8_t expected_exponent_no_sign = expected_exponent & SIGN_BIT_CLEAR_MASK;
+			
+			//Only lhs causes overflow
+			if(lhs_overflow){
+				//Right shifted the amount required to avoid overflow	
+				lhs.decimals >> (expected_exponent_no_sign - lhs.exponent);
+			}
+			
+			//Only rhs causes overflow
+			else if(rhs_overflow)
+				//Right shifted the amount required to avoid overflow
+				rhs.decimals >> (expected_exponent_no_sign - lhs.exponent);
+		} 
+		
+		//Overflow is fixed and results in a 16 bit number.
+		//Keep the sign and set exponent to max (16).
+		expected_exponent = expected_exponent_sign + INT_SIZE;
+
 	}
 	
-	return Fixfloat_t(decimals, exponent);
+	lhs.decimals *= rhs.decimals;
+	lhs.exponent = expected_exponent;
+	
+	return lhs;
 }
 
 

@@ -1,37 +1,22 @@
-float fast_inverse_sqrt( float number )
-{
-	long i;
-	float x2, y;
-	const float threehalfs = 1.5F;
-
-	x2 = number * 0.5F;
-	y  = number;
-	i  = * ( long * ) &y;                       // evil floating point bit level hacking
-	i  = 0x5f3759df - ( i >> 1 );               // what the fuck?
-	y  = * ( float * ) &i;
-	y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
-	//	y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
-
-	return y;
-}
-
 //Float type between 0 and 1 with guards against over- and underflow.
 class Fixfloat_t{
 private:
 	unsigned int decimals;
 	
-	//Mathematically exponent will always be zero and way less than 255
+	//Mathematically exponent will always be less than zero and way less than 255
 	//Sign bit will therefore be saved here.
-	int8_t exponent;
-	
+	uint8_t exponent;
+
 public:	
 	Fixfloat_t(): decimals(0), exponent(0){}
 	Fixfloat_t(unsigned int d, uint8_t e): decimals(d), exponent(e){}
+	Fixfloat_t(Fixfloat_t n): decimals(n.decimals), exponent(n.exponent){}
+
 
 	//Operators
 	Fixfloat_t operator+(const Fixfloat_t &rhs);
 	Fixfloat_t operator-(const Fixfloat_t &rhs);
-	Fixfloat_t operator*(const Fixfloat_t &rhs);
+	Fixfloat_t operator*(Fixfloat_t rhs);
 	Fixfloat_t operator+=(Fixfloat_t rhs);
 	Fixfloat_t operator-=(Fixfloat_t rhs);
 	Fixfloat_t operator*=(Fixfloat_t rhs);
@@ -41,8 +26,7 @@ class Quaternion{
 private:
 	Fixfloat_t eta;
 	Fixfloat_t epsilon;
-	Fixfloat_t q_dot[4];
-
+	
 public:
 	//Uses angular velocity
 	void calculate_q_dot(int16_t omega);
