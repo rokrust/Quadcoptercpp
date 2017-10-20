@@ -1,5 +1,5 @@
 ﻿#include "math.h"
-#include <cmath>
+//#include <cmath>
 
 #define INT_SIZE 16
 #define SIGN_BIT_GET_MASK 0x80
@@ -8,18 +8,13 @@
 #define get_sign(x) (SIGN_BIT_GET_MASK & x) >> 8
 
 Fixfloat_t Fixfloat_t::operator+(const Fixfloat_t &rhs){
-		unsigned int d = this->decimals + rhs.decimals;
-		uint8_t e = this->exponent;
-		
-		return Fixfloat_t(d, e);
+bool lhs_sign = this->exponent & SIGN_BIT_GET_MASK;
+bool rhs_sign = rhs->exponent & SIGN_BIT_GET_MASK;
 }
 
 //Needs an underflow check
 Fixfloat_t Fixfloat_t::operator-(const Fixfloat_t &rhs){
-	unsigned int d = this->decimals - rhs.decimals;
-	uint8_t e = this->exponent;
-	
-	return Fixfloat_t(d, e);
+
 }
 
 //Fast float multiplication taking advantage of the fact that most multiplications will
@@ -40,8 +35,8 @@ Fixfloat_t Fixfloat_t::operator*(Fixfloat_t rhs){
 		bool rhs_overflow = rhs.exponent > 8;
 		if(lhs_overflow && rhs_overflow){
 			
-			lhs.decimals >> lhs.exponent - 8;
-			rhs.decimals >> rhs.exponent - 8;
+			lhs.decimals >> (lhs.exponent - 8);
+			rhs.decimals >> (rhs.exponent - 8);
 		}
 		
 		//Only one number causes overflow. Not a likely scenario as

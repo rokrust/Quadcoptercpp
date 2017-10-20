@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 //Float type between 0 and 1 with guards against over- and underflow.
 class Fixfloat_t{
 private:
